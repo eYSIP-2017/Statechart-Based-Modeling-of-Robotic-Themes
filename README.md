@@ -1,1 +1,3 @@
-# Statechart-Based-Modeling-of-Robotic-Themes
+# Statechart Based Modeling of Robotic Themes
+
+Statechart based modeling is used when there is strict time constraint for developing the project. This kind of model also makes programmers job easy as system generated code is not prone to syntactic errors. Development time, Human resources required also reduces a lot using this modeling technique. We can have independent components for each project, this helps in parallel progress of work. This can also be used to educate students in schools as this model provides high level abstraction which hides all the technical internal details. Comparison study is required to describe the pros and cons of statechart based modeling technique also the limitations.
