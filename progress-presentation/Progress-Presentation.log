@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.17 (MiKTeX 2.9.6210 64-bit) (preloaded format=pdflatex 2017.4.23)  6 JUN 2017 10:06
+This is pdfTeX, Version 3.14159265-2.6-1.40.17 (MiKTeX 2.9.6210 64-bit) (preloaded format=pdflatex 2017.4.23)  6 JUN 2017 10:17
 entering extended mode
 **./Progress-Presentation.tex
 (Progress-Presentation.tex
@@ -876,7 +876,7 @@ thkerncmss.
 
 ] [4
 
-] <sequence1011.png, id=168, 518.6878pt x 378.66469pt>
+] <sequence1011.png, id=169, 518.6878pt x 378.66469pt>
 File: sequence1011.png Graphic file (type png)
 
 <use sequence1011.png>
@@ -894,7 +894,7 @@ Overfull \vbox (17.79205pt too high) detected at line 88
 [5
 
  <./sequence1011.png>]
-<obstacle_avoider.png, id=203, 581.92406pt x 342.5297pt>
+<obstacle_avoider.png, id=204, 581.92406pt x 342.5297pt>
 File: obstacle_avoider.png Graphic file (type png)
 
 <use obstacle_avoider.png>
@@ -907,19 +907,15 @@ Overfull \hbox (23.37625pt too wide) in paragraph at lines 94--94
 
 [6
 
- <./obstacle_avoider.png>] <ortho.png, id=236, 691.58376pt x 439.6425pt>
+ <./obstacle_avoider.png>] <ortho.png, id=237, 691.58376pt x 439.6425pt>
 File: ortho.png Graphic file (type png)
 
 <use ortho.png>
 Package pdftex.def Info: ortho.png used on input line 100.
-(pdftex.def)             Requested size: 326.63786pt x 207.70534pt.
+(pdftex.def)             Requested size: 296.76315pt x 188.64008pt.
 
-Overfull \hbox (35.89523pt too wide) in paragraph at lines 100--100
+Overfull \hbox (6.02052pt too wide) in paragraph at lines 100--100
 [][]  
- []
-
-
-Overfull \vbox (1.00316pt too high) detected at line 100
  []
 
 [7
@@ -954,20 +950,21 @@ LaTeX Font Warning: Size substitutions with differences
 
  ) 
 Here is how much of TeX's memory you used:
- 17164 strings out of 493333
- 328729 string characters out of 3139179
+ 17166 strings out of 493333
+ 328753 string characters out of 3139179
  403386 words of memory out of 3000000
- 20264 multiletter control sequences out of 15000+200000
- 8347 words of font info for 31 fonts, out of 3000000 for 9000
+ 20265 multiletter control sequences out of 15000+200000
+ 8641 words of font info for 32 fonts, out of 3000000 for 9000
  1141 hyphenation exceptions out of 8191
  56i,17n,55p,789b,557s stack positions out of 5000i,500n,10000p,200000b,50000s
 <C:/Program Files/MiKTeX 2.9/fonts/type1/public/amsfonts/cm/cmss10.pfb><C:/Pr
 ogram Files/MiKTeX 2.9/fonts/type1/public/amsfonts/cm/cmss12.pfb><C:/Program Fi
 les/MiKTeX 2.9/fonts/type1/public/amsfonts/cm/cmss8.pfb><C:/Program Files/MiKTe
-X 2.9/fonts/type1/public/amsfonts/cm/cmss9.pfb>
-Output written on Progress-Presentation.pdf (10 pages, 212091 bytes).
+X 2.9/fonts/type1/public/amsfonts/cm/cmss9.pfb><C:/Program Files/MiKTeX 2.9/fon
+ts/type1/public/amsfonts/cm/cmssbx10.pfb>
+Output written on Progress-Presentation.pdf (10 pages, 224026 bytes).
 PDF statistics:
- 384 PDF objects out of 1000 (max. 8388607)
+ 388 PDF objects out of 1000 (max. 8388607)
  28 named destinations out of 1000 (max. 500000)
  106 words of extra memory for PDF output out of 10000 (max. 10000000)
 
