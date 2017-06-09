@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.17 (MiKTeX 2.9.6210 64-bit) (preloaded format=pdflatex 2017.4.23)  6 JUN 2017 14:32
+This is pdfTeX, Version 3.14159265-2.6-1.40.17 (MiKTeX 2.9.6210 64-bit) (preloaded format=pdflatex 2017.4.23)  9 JUN 2017 09:45
 entering extended mode
 **./Progress-Presentation.tex
 (Progress-Presentation.tex
@@ -880,15 +880,15 @@ thkerncmss.
 File: sequence1011.png Graphic file (type png)
 
 <use sequence1011.png>
-Package pdftex.def Info: sequence1011.png used on input line 88.
+Package pdftex.def Info: sequence1011.png used on input line 89.
 (pdftex.def)             Requested size: 312.99585pt x 238.43867pt.
 
-Overfull \hbox (22.25322pt too wide) in paragraph at lines 88--88
+Overfull \hbox (22.25322pt too wide) in paragraph at lines 89--89
 [][]  
  []
 
 
-Overfull \vbox (17.79205pt too high) detected at line 88
+Overfull \vbox (17.79205pt too high) detected at line 89
  []
 
 [5
@@ -898,33 +898,46 @@ Overfull \vbox (17.79205pt too high) detected at line 88
 File: obstacle_avoider.png Graphic file (type png)
 
 <use obstacle_avoider.png>
-Package pdftex.def Info: obstacle_avoider.png used on input line 94.
+Package pdftex.def Info: obstacle_avoider.png used on input line 95.
 (pdftex.def)             Requested size: 314.11888pt x 184.9476pt.
 
-Overfull \hbox (23.37625pt too wide) in paragraph at lines 94--94
+Overfull \hbox (23.37625pt too wide) in paragraph at lines 95--95
 [][]  
  []
 
 [6
 
- <./obstacle_avoider.png>] <ortho.png, id=237, 691.58376pt x 439.6425pt>
-File: ortho.png Graphic file (type png)
+ <./obstacle_avoider.png>]
+<TwoBitCounter.png, id=238, 486.31688pt x 354.57469pt>
+File: TwoBitCounter.png Graphic file (type png)
+ <use TwoBitCounter.png>
+Package pdftex.def Info: TwoBitCounter.png used on input line 101.
+(pdftex.def)             Requested size: 306.15121pt x 223.35619pt.
 
-<use ortho.png>
-Package pdftex.def Info: ortho.png used on input line 100.
-(pdftex.def)             Requested size: 296.76315pt x 188.64008pt.
-
-Overfull \hbox (6.02052pt too wide) in paragraph at lines 100--100
+Overfull \hbox (15.40858pt too wide) in paragraph at lines 101--101
 [][]  
+ []
+
+
+Overfull \vbox (16.654pt too high) detected at line 101
  []
 
 [7
 
- <./ortho.png>] [8
+ <./TwoBitCounter.png>]
+<WhiteLineFollower.png, id=272, 581.92406pt x 421.575pt>
+File: WhiteLineFollower.png Graphic file (type png)
 
-] [9
+<use WhiteLineFollower.png>
+Package pdftex.def Info: WhiteLineFollower.png used on input line 104.
+(pdftex.def)             Requested size: 274.85402pt x 199.1695pt.
+ [8
+
+ <./WhiteLineFollower.png>] [9
 
 ] [10
+
+] [11
 
 ]
 \tf@nav=\write6
@@ -936,11 +949,12 @@ Overfull \hbox (6.02052pt too wide) in paragraph at lines 100--100
 \tf@snm=\write8
 \openout8 = `Progress-Presentation.snm'.
 
-Package atveryend Info: Empty hook `BeforeClearDocument' on input line 125.
-Package atveryend Info: Empty hook `AfterLastShipout' on input line 125.
- (Progress-Presentation.aux)
-Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 125.
-Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 125.
+Package atveryend Info: Empty hook `BeforeClearDocument' on input line 128.
+Package atveryend Info: Empty hook `AfterLastShipout' on input line 128.
+
+(Progress-Presentation.aux)
+Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 128.
+Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 128.
 Package rerunfilecheck Info: File `Progress-Presentation.out' has not changed.
 (rerunfilecheck)             Checksum: 327384DB0DD3DAB0793EE5FFC97442B2;304.
 
@@ -950,10 +964,10 @@ LaTeX Font Warning: Size substitutions with differences
 
  ) 
 Here is how much of TeX's memory you used:
- 17166 strings out of 493333
- 328753 string characters out of 3139179
+ 17175 strings out of 493333
+ 328952 string characters out of 3139179
  403386 words of memory out of 3000000
- 20265 multiletter control sequences out of 15000+200000
+ 20271 multiletter control sequences out of 15000+200000
  8641 words of font info for 32 fonts, out of 3000000 for 9000
  1141 hyphenation exceptions out of 8191
  56i,17n,55p,789b,557s stack positions out of 5000i,500n,10000p,200000b,50000s
@@ -962,9 +976,9 @@ ogram Files/MiKTeX 2.9/fonts/type1/public/amsfonts/cm/cmss12.pfb><C:/Program Fi
 les/MiKTeX 2.9/fonts/type1/public/amsfonts/cm/cmss8.pfb><C:/Program Files/MiKTe
 X 2.9/fonts/type1/public/amsfonts/cm/cmss9.pfb><C:/Program Files/MiKTeX 2.9/fon
 ts/type1/public/amsfonts/cm/cmssbx10.pfb>
-Output written on Progress-Presentation.pdf (10 pages, 223891 bytes).
+Output written on Progress-Presentation.pdf (11 pages, 226816 bytes).
 PDF statistics:
- 388 PDF objects out of 1000 (max. 8388607)
- 28 named destinations out of 1000 (max. 500000)
- 106 words of extra memory for PDF output out of 10000 (max. 10000000)
+ 423 PDF objects out of 1000 (max. 8388607)
+ 30 named destinations out of 1000 (max. 500000)
+ 111 words of extra memory for PDF output out of 10000 (max. 10000000)
 
