@@ -1,0 +1,267 @@
+
+#include <stdlib.h>
+#include <string.h>
+#include "..\src\sc_types.h"
+#include "Buzzer.h"
+#include "BuzzerRequired.h"
+/*! \file Implementation of the state machine 'buzzer'
+*/
+
+/* prototypes of all internal functions */
+static sc_boolean buzzer_check_main_region_buzzer_on_tr0_tr0(const Buzzer* handle);
+static sc_boolean buzzer_check_main_region_buzzer_off_tr0_tr0(const Buzzer* handle);
+static void buzzer_effect_main_region_buzzer_on_tr0(Buzzer* handle);
+static void buzzer_effect_main_region_buzzer_off_tr0(Buzzer* handle);
+static void buzzer_enact_main_region_buzzer_on(Buzzer* handle);
+static void buzzer_enact_main_region_buzzer_off(Buzzer* handle);
+static void buzzer_enseq_main_region_buzzer_on_default(Buzzer* handle);
+static void buzzer_enseq_main_region_buzzer_off_default(Buzzer* handle);
+static void buzzer_enseq_main_region_default(Buzzer* handle);
+static void buzzer_exseq_main_region_buzzer_on(Buzzer* handle);
+static void buzzer_exseq_main_region_buzzer_off(Buzzer* handle);
+static void buzzer_exseq_main_region(Buzzer* handle);
+static void buzzer_react_main_region_buzzer_on(Buzzer* handle);
+static void buzzer_react_main_region_buzzer_off(Buzzer* handle);
+static void buzzer_react_main_region__entry_Default(Buzzer* handle);
+static void buzzer_clearInEvents(Buzzer* handle);
+static void buzzer_clearOutEvents(Buzzer* handle);
+
+
+void buzzer_init(Buzzer* handle)
+{
+	sc_integer i;
+
+	for (i = 0; i < BUZZER_MAX_ORTHOGONAL_STATES; ++i)
+	{
+		handle->stateConfVector[i] = Buzzer_last_state;
+	}
+	
+	
+	handle->stateConfVectorPosition = 0;
+
+	buzzer_clearInEvents(handle);
+	buzzer_clearOutEvents(handle);
+
+
+}
+
+void buzzer_enter(Buzzer* handle)
+{
+	/* Default enter sequence for statechart buzzer */
+	buzzer_enseq_main_region_default(handle);
+}
+
+void buzzer_exit(Buzzer* handle)
+{
+	/* Default exit sequence for statechart buzzer */
+	buzzer_exseq_main_region(handle);
+}
+
+sc_boolean buzzer_isActive(const Buzzer* handle)
+{
+	sc_boolean result;
+	if (handle->stateConfVector[0] != Buzzer_last_state)
+	{
+		result =  bool_true;
+	}
+	else
+	{
+		result = bool_false;
+	}
+	return result;
+}
+
+/* 
+ * Always returns 'false' since this state machine can never become final.
+ */
+sc_boolean buzzer_isFinal(const Buzzer* handle)
+{
+   return bool_false;
+}
+
+static void buzzer_clearInEvents(Buzzer* handle)
+{
+}
+
+static void buzzer_clearOutEvents(Buzzer* handle)
+{
+}
+
+void buzzer_runCycle(Buzzer* handle)
+{
+	
+	buzzer_clearOutEvents(handle);
+	
+	for (handle->stateConfVectorPosition = 0;
+		handle->stateConfVectorPosition < BUZZER_MAX_ORTHOGONAL_STATES;
+		handle->stateConfVectorPosition++)
+		{
+			
+		switch (handle->stateConfVector[handle->stateConfVectorPosition])
+		{
+		case Buzzer_main_region_buzzer_on :
+		{
+			buzzer_react_main_region_buzzer_on(handle);
+			break;
+		}
+		case Buzzer_main_region_buzzer_off :
+		{
+			buzzer_react_main_region_buzzer_off(handle);
+			break;
+		}
+		default:
+			break;
+		}
+	}
+	
+	buzzer_clearInEvents(handle);
+}
+
+
+sc_boolean buzzer_isStateActive(const Buzzer* handle, BuzzerStates state)
+{
+	sc_boolean result = bool_false;
+	switch (state)
+	{
+		case Buzzer_main_region_buzzer_on :
+			result = (sc_boolean) (handle->stateConfVector[0] == Buzzer_main_region_buzzer_on
+			);
+			break;
+		case Buzzer_main_region_buzzer_off :
+			result = (sc_boolean) (handle->stateConfVector[0] == Buzzer_main_region_buzzer_off
+			);
+			break;
+		default:
+			result = bool_false;
+			break;
+	}
+	return result;
+}
+
+
+
+
+/* implementations of all internal functions */
+
+static sc_boolean buzzer_check_main_region_buzzer_on_tr0_tr0(const Buzzer* handle)
+{
+	return bool_true;
+}
+
+static sc_boolean buzzer_check_main_region_buzzer_off_tr0_tr0(const Buzzer* handle)
+{
+	return bool_true;
+}
+
+static void buzzer_effect_main_region_buzzer_on_tr0(Buzzer* handle)
+{
+	buzzer_exseq_main_region_buzzer_on(handle);
+	buzzer_enseq_main_region_buzzer_off_default(handle);
+}
+
+static void buzzer_effect_main_region_buzzer_off_tr0(Buzzer* handle)
+{
+	buzzer_exseq_main_region_buzzer_off(handle);
+	buzzer_enseq_main_region_buzzer_on_default(handle);
+}
+
+/* Entry action for state 'buzzer_on'. */
+static void buzzer_enact_main_region_buzzer_on(Buzzer* handle)
+{
+	/* Entry action for state 'buzzer_on'. */
+	buzzerIfaceInput_buzzer_on(handle);
+	buzzerIfaceInput_wait(handle, 1);
+}
+
+/* Entry action for state 'buzzer_off'. */
+static void buzzer_enact_main_region_buzzer_off(Buzzer* handle)
+{
+	/* Entry action for state 'buzzer_off'. */
+	buzzerIfaceInput_buzzer_off(handle);
+	buzzerIfaceInput_wait(handle, 1);
+}
+
+/* 'default' enter sequence for state buzzer_on */
+static void buzzer_enseq_main_region_buzzer_on_default(Buzzer* handle)
+{
+	/* 'default' enter sequence for state buzzer_on */
+	buzzer_enact_main_region_buzzer_on(handle);
+	handle->stateConfVector[0] = Buzzer_main_region_buzzer_on;
+	handle->stateConfVectorPosition = 0;
+}
+
+/* 'default' enter sequence for state buzzer_off */
+static void buzzer_enseq_main_region_buzzer_off_default(Buzzer* handle)
+{
+	/* 'default' enter sequence for state buzzer_off */
+	buzzer_enact_main_region_buzzer_off(handle);
+	handle->stateConfVector[0] = Buzzer_main_region_buzzer_off;
+	handle->stateConfVectorPosition = 0;
+}
+
+/* 'default' enter sequence for region main region */
+static void buzzer_enseq_main_region_default(Buzzer* handle)
+{
+	/* 'default' enter sequence for region main region */
+	buzzer_react_main_region__entry_Default(handle);
+}
+
+/* Default exit sequence for state buzzer_on */
+static void buzzer_exseq_main_region_buzzer_on(Buzzer* handle)
+{
+	/* Default exit sequence for state buzzer_on */
+	handle->stateConfVector[0] = Buzzer_last_state;
+	handle->stateConfVectorPosition = 0;
+}
+
+/* Default exit sequence for state buzzer_off */
+static void buzzer_exseq_main_region_buzzer_off(Buzzer* handle)
+{
+	/* Default exit sequence for state buzzer_off */
+	handle->stateConfVector[0] = Buzzer_last_state;
+	handle->stateConfVectorPosition = 0;
+}
+
+/* Default exit sequence for region main region */
+static void buzzer_exseq_main_region(Buzzer* handle)
+{
+	/* Default exit sequence for region main region */
+	/* Handle exit of all possible states (of buzzer.main_region) at position 0... */
+	switch(handle->stateConfVector[ 0 ])
+	{
+		case Buzzer_main_region_buzzer_on :
+		{
+			buzzer_exseq_main_region_buzzer_on(handle);
+			break;
+		}
+		case Buzzer_main_region_buzzer_off :
+		{
+			buzzer_exseq_main_region_buzzer_off(handle);
+			break;
+		}
+		default: break;
+	}
+}
+
+/* The reactions of state buzzer_on. */
+static void buzzer_react_main_region_buzzer_on(Buzzer* handle)
+{
+	/* The reactions of state buzzer_on. */
+	buzzer_effect_main_region_buzzer_on_tr0(handle);
+}
+
+/* The reactions of state buzzer_off. */
+static void buzzer_react_main_region_buzzer_off(Buzzer* handle)
+{
+	/* The reactions of state buzzer_off. */
+	buzzer_effect_main_region_buzzer_off_tr0(handle);
+}
+
+/* Default react sequence for initial entry  */
+static void buzzer_react_main_region__entry_Default(Buzzer* handle)
+{
+	/* Default react sequence for initial entry  */
+	buzzer_enseq_main_region_buzzer_on_default(handle);
+}
+
+

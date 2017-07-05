@@ -1,0 +1,70 @@
+
+#ifndef BUZZER_H_
+#define BUZZER_H_
+
+#include "..\src\sc_types.h"
+		
+#ifdef __cplusplus
+extern "C" { 
+#endif 
+
+/*! \file Header of the state machine 'buzzer'.
+*/
+
+/*! Enumeration of all states */ 
+typedef enum
+{
+	Buzzer_main_region_buzzer_on,
+	Buzzer_main_region_buzzer_off,
+	Buzzer_last_state
+} BuzzerStates;
+
+
+/*! Define dimension of the state configuration vector for orthogonal states. */
+#define BUZZER_MAX_ORTHOGONAL_STATES 1
+
+/*! 
+ * Type definition of the data structure for the Buzzer state machine.
+ * This data structure has to be allocated by the client code. 
+ */
+typedef struct
+{
+	BuzzerStates stateConfVector[BUZZER_MAX_ORTHOGONAL_STATES];
+	sc_ushort stateConfVectorPosition; 
+	
+} Buzzer;
+
+/*! Initializes the Buzzer state machine data structures. Must be called before first usage.*/
+extern void buzzer_init(Buzzer* handle);
+
+/*! Activates the state machine */
+extern void buzzer_enter(Buzzer* handle);
+
+/*! Deactivates the state machine */
+extern void buzzer_exit(Buzzer* handle);
+
+/*! Performs a 'run to completion' step. */
+extern void buzzer_runCycle(Buzzer* handle);
+
+
+
+/*!
+ * Checks whether the state machine is active (until 2.4.1 this method was used for states).
+ * A state machine is active if it was entered. It is inactive if it has not been entered at all or if it has been exited.
+ */
+extern sc_boolean buzzer_isActive(const Buzzer* handle);
+
+/*!
+ * Checks if all active states are final. 
+ * If there are no active states then the state machine is considered being inactive. In this case this method returns false.
+ */
+extern sc_boolean buzzer_isFinal(const Buzzer* handle);
+
+/*! Checks if the specified state is active (until 2.4.1 the used method for states was called isActive()). */
+extern sc_boolean buzzer_isStateActive(const Buzzer* handle, BuzzerStates state);
+
+#ifdef __cplusplus
+}
+#endif 
+
+#endif /* BUZZER_H_ */

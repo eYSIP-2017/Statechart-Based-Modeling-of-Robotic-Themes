@@ -1,0 +1,11 @@
+GeneratorModel for yakindu::c {
+
+	statechart WhiteLineFollower {
+
+		feature Outlet {
+			targetProject = "WhiteLineFollower"
+			targetFolder = "src-gen"
+			libraryTargetFolder = "src"
+		}
+	}
+}
