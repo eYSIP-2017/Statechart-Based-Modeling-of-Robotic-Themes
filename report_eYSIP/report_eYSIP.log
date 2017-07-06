@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.17 (MiKTeX 2.9.6210 64-bit) (preloaded format=pdflatex 2017.4.23)  5 JUL 2017 23:11
+This is pdfTeX, Version 3.14159265-2.6-1.40.17 (MiKTeX 2.9.6210 64-bit) (preloaded format=pdflatex 2017.4.23)  6 JUL 2017 11:23
 entering extended mode
 **./report_eYSIP.tex
 (report_eYSIP.tex
@@ -1028,20 +1028,20 @@ Package pdftex.def Info: linefollower.png used on input line 148.
 File: linefollower_on.png Graphic file (type png)
 
 <use linefollower_on.png>
-Package pdftex.def Info: linefollower_on.png used on input line 153.
+Package pdftex.def Info: linefollower_on.png used on input line 154.
 (pdftex.def)             Requested size: 313.02185pt x 329.28271pt.
 
-Overfull \hbox (137.52304pt too wide) in paragraph at lines 153--154
+Overfull \hbox (137.52304pt too wide) in paragraph at lines 154--155
  [][] 
  []
 
 File: logo.png Graphic file (type png)
 <use logo.png>
-Package pdftex.def Info: logo.png used on input line 160.
+Package pdftex.def Info: logo.png used on input line 162.
 (pdftex.def)             Requested size: 123.46092pt x 131.49092pt.
 File: logo.png Graphic file (type png)
  <use logo.png>
-Package pdftex.def Info: logo.png used on input line 160.
+Package pdftex.def Info: logo.png used on input line 162.
 (pdftex.def)             Requested size: 28.45274pt x 30.30254pt.
 
 
@@ -1053,11 +1053,11 @@ Package Fancyhdr Warning: \headheight is too small (26.0pt):
 [2]
 File: logo.png Graphic file (type png)
  <use logo.png>
-Package pdftex.def Info: logo.png used on input line 160.
+Package pdftex.def Info: logo.png used on input line 162.
 (pdftex.def)             Requested size: 123.46092pt x 131.49092pt.
 File: logo.png Graphic file (type png)
  <use logo.png>
-Package pdftex.def Info: logo.png used on input line 160.
+Package pdftex.def Info: logo.png used on input line 162.
 (pdftex.def)             Requested size: 28.45274pt x 30.30254pt.
  [3 <./linefollower.png> <./linefollower_on.png>]
 Missing character: There is no ‚ in font cmti12!
@@ -1069,35 +1069,35 @@ Missing character: There is no ú in font cmti12!
 Missing character: There is no ‚ in font cmti12!
 Missing character: There is no Ä in font cmti12!
 Missing character: There is no ù in font cmti12!
- <turn.png, id=120, 163.3603pt x 344.03531pt>
+ <turn.png, id=124, 163.3603pt x 344.03531pt>
 File: turn.png Graphic file (type png)
  <use turn.png>
-Package pdftex.def Info: turn.png used on input line 168.
+Package pdftex.def Info: turn.png used on input line 170.
 (pdftex.def)             Requested size: 98.01692pt x 206.42278pt.
 
-<turning_on.png, id=121, 792.71156pt x 322.95656pt>
+<turning_on.png, id=125, 792.71156pt x 322.95656pt>
 File: turning_on.png Graphic file (type png)
  <use turning_on.png>
-Package pdftex.def Info: turning_on.png used on input line 173.
+Package pdftex.def Info: turning_on.png used on input line 176.
 (pdftex.def)             Requested size: 515.25641pt x 209.91927pt.
 
-Overfull \hbox (125.25641pt too wide) in paragraph at lines 173--174
+Overfull \hbox (125.25641pt too wide) in paragraph at lines 176--177
  [][] 
  []
 
 File: logo.png Graphic file (type png)
 <use logo.png>
-Package pdftex.def Info: logo.png used on input line 179.
+Package pdftex.def Info: logo.png used on input line 183.
 (pdftex.def)             Requested size: 123.46092pt x 131.49092pt.
 File: logo.png Graphic file (type png)
  <use logo.png>
-Package pdftex.def Info: logo.png used on input line 179.
+Package pdftex.def Info: logo.png used on input line 183.
 (pdftex.def)             Requested size: 28.45274pt x 30.30254pt.
  [4 <./turn.png>]
-<orientation.png, id=129, 584.93532pt x 587.94656pt>
+<orientation.png, id=135, 584.93532pt x 587.94656pt>
 File: orientation.png Graphic file (type png)
  <use orientation.png>
-Package pdftex.def Info: orientation.png used on input line 184.
+Package pdftex.def Info: orientation.png used on input line 188.
 (pdftex.def)             Requested size: 350.9639pt x 352.77066pt.
 
 
@@ -1117,175 +1117,175 @@ Missing character: There is no Ä in font cmr12!
 Missing character: There is no ù in font cmr12!
 
 LaTeX Warning: No positions in optional float specifier.
-               Default added (so using `tbp') on input line 191.
+               Default added (so using `tbp') on input line 196.
 
-<coordinates.png, id=130, 306.39468pt x 304.88907pt>
+<coordinates.png, id=137, 306.39468pt x 304.88907pt>
 File: coordinates.png Graphic file (type png)
  <use coordinates.png>
-Package pdftex.def Info: coordinates.png used on input line 194.
+Package pdftex.def Info: coordinates.png used on input line 199.
 (pdftex.def)             Requested size: 183.83823pt x 182.93484pt.
 
-Overfull \hbox (8.33942pt too wide) in paragraph at lines 194--195
+Overfull \hbox (8.33942pt too wide) in paragraph at lines 199--200
  [][] 
  []
 
-<GoToTargetNode.png, id=131, 243.91125pt x 386.19281pt>
+<GoToTargetNode.png, id=138, 243.91125pt x 386.19281pt>
 File: GoToTargetNode.png Graphic file (type png)
 
 <use GoToTargetNode.png>
-Package pdftex.def Info: GoToTargetNode.png used on input line 199.
+Package pdftex.def Info: GoToTargetNode.png used on input line 205.
 (pdftex.def)             Requested size: 146.34787pt x 231.71745pt.
 
 
 LaTeX Warning: No positions in optional float specifier.
-               Default added (so using `tbp') on input line 204.
+               Default added (so using `tbp') on input line 210.
 
-<node_action.png, id=132, 338.76563pt x 469.755pt>
+<node_action.png, id=139, 338.76563pt x 469.755pt>
 File: node_action.png Graphic file (type png)
  <use node_action.png>
-Package pdftex.def Info: node_action.png used on input line 206.
+Package pdftex.def Info: node_action.png used on input line 212.
 (pdftex.def)             Requested size: 203.26093pt x 281.85518pt.
 File: logo.png Graphic file (type png)
 
 <use logo.png>
-Package pdftex.def Info: logo.png used on input line 209.
+Package pdftex.def Info: logo.png used on input line 216.
 (pdftex.def)             Requested size: 123.46092pt x 131.49092pt.
 File: logo.png Graphic file (type png)
  <use logo.png>
-Package pdftex.def Info: logo.png used on input line 209.
+Package pdftex.def Info: logo.png used on input line 216.
 (pdftex.def)             Requested size: 28.45274pt x 30.30254pt.
  [5 <./turning_on.png>]
 File: logo.png Graphic file (type png)
  <use logo.png>
-Package pdftex.def Info: logo.png used on input line 218.
+Package pdftex.def Info: logo.png used on input line 225.
 (pdftex.def)             Requested size: 123.46092pt x 131.49092pt.
 File: logo.png Graphic file (type png)
 
 <use logo.png>
-Package pdftex.def Info: logo.png used on input line 218.
+Package pdftex.def Info: logo.png used on input line 225.
 (pdftex.def)             Requested size: 28.45274pt x 30.30254pt.
  [6 <./orientation.png>]
 File: logo.png Graphic file (type png)
  <use logo.png>
-Package pdftex.def Info: logo.png used on input line 218.
+Package pdftex.def Info: logo.png used on input line 225.
 (pdftex.def)             Requested size: 123.46092pt x 131.49092pt.
 File: logo.png Graphic file (type png)
  <use logo.png>
-Package pdftex.def Info: logo.png used on input line 218.
+Package pdftex.def Info: logo.png used on input line 225.
 (pdftex.def)             Requested size: 28.45274pt x 30.30254pt.
  [7 <./coordinates.png> <./GoToTargetNode.png> <./node_action.png>]
 
 LaTeX Warning: No positions in optional float specifier.
-               Default added (so using `tbp') on input line 223.
+               Default added (so using `tbp') on input line 230.
 
-<main.png, id=161, 255.20343pt x 587.94656pt>
+<main.png, id=170, 255.20343pt x 587.94656pt>
 File: main.png Graphic file (type png)
  <use main.png>
-Package pdftex.def Info: main.png used on input line 225.
+Package pdftex.def Info: main.png used on input line 232.
 (pdftex.def)             Requested size: 204.16301pt x 470.3579pt.
 
 
 LaTeX Warning: No positions in optional float specifier.
-               Default added (so using `tbp') on input line 229.
+               Default added (so using `tbp') on input line 237.
 
-<picking.png, id=162, 197.98969pt x 395.22656pt>
+<picking.png, id=173, 197.98969pt x 395.22656pt>
 File: picking.png Graphic file (type png)
  <use picking.png>
-Package pdftex.def Info: picking.png used on input line 231.
+Package pdftex.def Info: picking.png used on input line 239.
 (pdftex.def)             Requested size: 118.79472pt x 237.13776pt.
 
-<dropping.png, id=163, 226.59656pt x 395.22656pt>
+<dropping.png, id=174, 226.59656pt x 395.22656pt>
 File: dropping.png Graphic file (type png)
  <use dropping.png>
-Package pdftex.def Info: dropping.png used on input line 235.
+Package pdftex.def Info: dropping.png used on input line 244.
 (pdftex.def)             Requested size: 135.95897pt x 237.13776pt.
 File: logo.png Graphic file (type png)
 
 <use logo.png>
-Package pdftex.def Info: logo.png used on input line 243.
+Package pdftex.def Info: logo.png used on input line 253.
 (pdftex.def)             Requested size: 123.46092pt x 131.49092pt.
 File: logo.png Graphic file (type png)
  <use logo.png>
-Package pdftex.def Info: logo.png used on input line 243.
+Package pdftex.def Info: logo.png used on input line 253.
 (pdftex.def)             Requested size: 28.45274pt x 30.30254pt.
  [8]
 File: logo.png Graphic file (type png)
  <use logo.png>
-Package pdftex.def Info: logo.png used on input line 243.
+Package pdftex.def Info: logo.png used on input line 253.
 (pdftex.def)             Requested size: 123.46092pt x 131.49092pt.
 File: logo.png Graphic file (type png)
  <use logo.png>
-Package pdftex.def Info: logo.png used on input line 243.
+Package pdftex.def Info: logo.png used on input line 253.
 (pdftex.def)             Requested size: 28.45274pt x 30.30254pt.
  [9 <./main.png>]
 File: logo.png Graphic file (type png)
  <use logo.png>
-Package pdftex.def Info: logo.png used on input line 248.
+Package pdftex.def Info: logo.png used on input line 258.
 (pdftex.def)             Requested size: 123.46092pt x 131.49092pt.
 File: logo.png Graphic file (type png)
  <use logo.png>
-Package pdftex.def Info: logo.png used on input line 248.
+Package pdftex.def Info: logo.png used on input line 258.
 (pdftex.def)             Requested size: 28.45274pt x 30.30254pt.
  [10 <./picking.png> <./dropping.png>]
-<final_setup.png, id=186, 1284.8pt x 722.7pt>
+<final_setup.png, id=197, 1284.8pt x 722.7pt>
 File: final_setup.png Graphic file (type png)
  <use final_setup.png>
-Package pdftex.def Info: final_setup.png used on input line 258.
+Package pdftex.def Info: final_setup.png used on input line 268.
 (pdftex.def)             Requested size: 385.44298pt x 216.81166pt.
 File: logo.png Graphic file (type png)
 
 <use logo.png>
-Package pdftex.def Info: logo.png used on input line 268.
+Package pdftex.def Info: logo.png used on input line 278.
 (pdftex.def)             Requested size: 123.46092pt x 131.49092pt.
 File: logo.png Graphic file (type png)
  <use logo.png>
-Package pdftex.def Info: logo.png used on input line 268.
+Package pdftex.def Info: logo.png used on input line 278.
 (pdftex.def)             Requested size: 28.45274pt x 30.30254pt.
  [11 <./final_setup.png (PNG copy)>]
 File: logo.png Graphic file (type png)
 
 <use logo.png>
-Package pdftex.def Info: logo.png used on input line 268.
+Package pdftex.def Info: logo.png used on input line 278.
 (pdftex.def)             Requested size: 123.46092pt x 131.49092pt.
 File: logo.png Graphic file (type png)
  <use logo.png>
-Package pdftex.def Info: logo.png used on input line 268.
+Package pdftex.def Info: logo.png used on input line 278.
 (pdftex.def)             Requested size: 28.45274pt x 30.30254pt.
  [12]
 File: logo.png Graphic file (type png)
  <use logo.png>
-Package pdftex.def Info: logo.png used on input line 272.
+Package pdftex.def Info: logo.png used on input line 282.
 (pdftex.def)             Requested size: 123.46092pt x 131.49092pt.
 File: logo.png Graphic file (type png)
  <use logo.png>
-Package pdftex.def Info: logo.png used on input line 272.
+Package pdftex.def Info: logo.png used on input line 282.
 (pdftex.def)             Requested size: 28.45274pt x 30.30254pt.
  [13]
 File: logo.png Graphic file (type png)
 
 <use logo.png>
-Package pdftex.def Info: logo.png used on input line 279.
+Package pdftex.def Info: logo.png used on input line 289.
 (pdftex.def)             Requested size: 123.46092pt x 131.49092pt.
  [14
 
 ]
-Package atveryend Info: Empty hook `BeforeClearDocument' on input line 279.
-Package atveryend Info: Empty hook `AfterLastShipout' on input line 279.
+Package atveryend Info: Empty hook `BeforeClearDocument' on input line 289.
+Package atveryend Info: Empty hook `AfterLastShipout' on input line 289.
  (report_eYSIP.aux)
-Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 279.
-Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 279.
+Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 289.
+Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 289.
 Package rerunfilecheck Info: File `report_eYSIP.out' has not changed.
 (rerunfilecheck)             Checksum: 66BA156A47DC7332586EE5ABA662FC33;422.
-Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 279.
+Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 289.
  ) 
 Here is how much of TeX's memory you used:
- 30935 strings out of 493333
- 623529 string characters out of 3139179
- 724350 words of memory out of 3000000
- 33989 multiletter control sequences out of 15000+200000
+ 30946 strings out of 493333
+ 623658 string characters out of 3139179
+ 724826 words of memory out of 3000000
+ 34000 multiletter control sequences out of 15000+200000
  537833 words of font info for 48 fonts, out of 3000000 for 9000
  1141 hyphenation exceptions out of 8191
- 63i,15n,101p,10553b,866s stack positions out of 5000i,500n,10000p,200000b,50000s
+ 63i,15n,101p,10553b,872s stack positions out of 5000i,500n,10000p,200000b,50000s
 <C:/Program Files/MiKTeX 2.9/fonts/type1/public/amsfonts/cm/cmbx12.pfb><C:/Pr
 ogram Files/MiKTeX 2.9/fonts/type1/public/amsfonts/cm/cmcsc10.pfb><C:/Program F
 iles/MiKTeX 2.9/fonts/type1/public/amsfonts/cm/cmmi12.pfb><C:/Program Files/MiK
@@ -1293,9 +1293,9 @@ TeX 2.9/fonts/type1/public/amsfonts/cm/cmr12.pfb><C:/Program Files/MiKTeX 2.9/f
 onts/type1/public/amsfonts/cm/cmr17.pfb><C:/Program Files/MiKTeX 2.9/fonts/type
 1/public/amsfonts/cm/cmsy10.pfb><C:/Program Files/MiKTeX 2.9/fonts/type1/public
 /amsfonts/cm/cmti12.pfb>
-Output written on report_eYSIP.pdf (15 pages, 1023102 bytes).
+Output written on report_eYSIP.pdf (15 pages, 1025290 bytes).
 PDF statistics:
- 254 PDF objects out of 1000 (max. 8388607)
+ 265 PDF objects out of 1000 (max. 8388607)
  52 named destinations out of 1000 (max. 500000)
  278 words of extra memory for PDF output out of 10000 (max. 10000000)
 

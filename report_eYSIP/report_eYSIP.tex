@@ -93,7 +93,7 @@ Statechart based modeling is used when there is strict time constraint for devel
 resources required also reduces a lot using this modeling technique. We can have
 independent components for each project, this helps in parallel progress of work.
 This can also be used to educate students in schools as this model provides high
-level abstraction which hides all the technical internal details. Here in this project, we have tried to implement a eYRC 2015 theme using statechart based modeling. The theme name is puzzle solver.
+level abstraction which hides all the technical internal details. Here in this project, we have tried to implement a eYRC 2015 theme \emph{puzzle solver} using statechart based modeling.
 \subsection*{Completion status}
 \begin{enumerate}
 \item The syntax and semantics of statecharts were learnt as described by David Harel. 
@@ -147,69 +147,76 @@ The statechart consists of the states \textit{puzzle solver} and \textit{stop}. 
 	\centering
 	\includegraphics[scale=.7]{linefollower.png}
 	\caption{line follower machine}
+	\label{linefollower}
 \end{minipage}
 	\begin{minipage}{0.45\textwidth}
 	\centering
 	\includegraphics[scale=.6]{linefollower_on.png}
 	\caption{LineFollowerOn state}
+	\label{linefollower_on}
 \end{minipage}
 \end{figure}
-It contains two states, \textit{LineFollowerOff} and \textit{LineFollowerOn} (figure 1.1). Raising event \textit{StartLineFollower} when it is in \textit{LineFollowerOff} state makes transition to \textit{LineFollowerOn} state. 
+It contains two states, \textit{LineFollowerOff} and \textit{LineFollowerOn} as shown in the figure \ref{linefollower}. Raising event \textit{StartLineFollower} when it is in \textit{LineFollowerOff} state makes transition to \textit{LineFollowerOn} state. 
 The bot then starts following the line. Similarly, raising an event \textit{StopLineFollower} when it is in \textit{LineFollowerOn} state makes a transition to \textit{LineFollowerOff} and robot stops following the line.
-The \textit{LineFollowerOn} state is further divided into some substates (figure 1.2). This state machine tries to follow the black line with the line between the left and center sensor. It contains states \textit{AllSensorsDetectWhite}, \textit{LeftSensorDetectLine}, \textit{CenterSensorDetectLine} and \textit{RightSensorDetectLine}. The actions are taken accordingly as the sensor values change after some threshold values.
+The \textit{LineFollowerOn} state is further divided into some substates as shown in figure \ref{linefollower_on}. This state machine tries to follow the black line with the line between the left and center sensor. It contains states \textit{AllSensorsDetectWhite}, \textit{LeftSensorDetectLine}, \textit{CenterSensorDetectLine} and \textit{RightSensorDetectLine}. The actions are taken accordingly as the sensor values change after some threshold values.
 
 \item \textbf{State machine for making turn}\\
-It contains two states, \textit{TurningOn} and \textit{TurningOff} (figure 1.3). When robot needs to take a turn in the grid, we need to give value to a variable turn as \textit{left, right”, “back”} and \textit{forward} according to the needed turn. After that, we need to raise an event \textit{StartTurning}. Then it will enter the \textit{TurningOn} state. The robot will start turning. As the turn is completed, it will automatically go to the \textit{TurningOff} state.
-\textit{TurningOn} state is further divided into further states as \textit{GoingForward, TurningLeft, TurningRight} and \textit{TurningBack} (figure 1.4).
+It contains two states, \textit{TurningOn} and \textit{TurningOff} as shown in figure \ref{turn}. When robot needs to take a turn in the grid, we need to give value to a variable turn as \textit{left, right”, “back”} and \textit{forward} according to the needed turn. After that, we need to raise an event \textit{StartTurning}. Then it will enter the \textit{TurningOn} state. The robot will start turning. As the turn is completed, it will automatically go to the \textit{TurningOff} state.
+\textit{TurningOn} state is further divided into further states as \textit{GoingForward, TurningLeft, TurningRight} and \textit{TurningBack} as shown in figure \ref{turning_on}.
 The state which is entered is selected on the basis of corresponding value of the variable turn.
 If system is in \textit{GoingForward} state, it will remain here and move forward. When the node is not detected, that is, the node has passed, it will exit this state and go to \textit{TurningOff} state.
 	\begin{figure}[!htbp]
 	\centering
 	\includegraphics[scale=.6]{turn.png}
 	\caption{Turn machine}
+	\label{turn}
 \end{figure}
 \begin{figure}[!htbp]
 	\centering
 	\includegraphics[scale=.65]{turning_on.png}
 	\caption{TurningOn state}
+	\label{turning_on}
 \end{figure}
 If system is in \textit{TurningRight} state, it will move bot forward 55 mm, break, move 55 degrees right and then keeps on turning right. When center sensor detects black (line), it will exit this state and go to \textit{TurningOff} state.
 If system is in \textit{TurningLeft} state, it will move forward 70 mm, break, move 55 degrees left and then keeps on turning left. When left sensor detects black (line), it will exit this state and go to \textit{TurningOff} state.
 If system is in \textit{TurningBack} state, it will move forward 40 mm, break, move 55 degrees right and then keeps on turning right with different velocities (to make sure of proper alignment with line as line should be between left and center sensor). When center sensor detects black (line), it will exit this state and go to \textit{TurningOff} state.
 
 \item \textbf{Orientation state machine}\\
-It keeps track of the orientation of the bot (figure 1.5). It contains four states \textit{East, West, North} and \textit{South}. It uses the turning state to orient the robot in a particular direction. 
+It keeps track of the orientation of the bot (figure \ref{orientation}). It contains four states \textit{East, West, North} and \textit{South}. It uses the turning state to orient the robot in a particular direction. 
 \begin{figure}[h]
 	\centering
 	\includegraphics[scale=.6]{orientation.png}
 	\caption{Orientation machine}
+	\label{orientation}
 \end{figure}
 For example, if \textit{OrientInEast} event is raised, in whichever of the four state the system is, it will enter in \textit{East} state by using the turning state machine with proper turn. Another way of using this state machine is if event \textit{left, right, front} or \textit{back} is raised, it will turn accordingly and update the orientation by going to the proper state.
 
 \item \textbf{Coordinates state machine}
-It contains only one state \textit{Coordinates} (figure 1.6). When an event \textit{update coordinates} is raised, it will update the “x” and “y” coordinates by incrementing or decrementing the appropriate value according to which of the state in Orientation state machine is active.\pagebreak
+It contains only one state \textit{Coordinates} as shown in figure \ref{coordinates}. When an event \textit{update coordinates} is raised, it will update the “x” and “y” coordinates by incrementing or decrementing the appropriate value according to which of the state in Orientation state machine is active.\pagebreak
 	\begin{figure}[]
 		\begin{minipage}{0.45\textwidth}
 	\centering
 	\includegraphics[scale=.6]{coordinates.png}
 	\caption{Coordinates machine}
+	\label{coordinates}
 	\end{minipage}
 \begin{minipage}{0.45\textwidth}
 		\centering
 	\includegraphics[scale=.6]{GoToTargetNode.png}
 	\caption{GoToTargetNode machine}
-	
+	\label{GoToTargetNode}
 \end{minipage}
 \end{figure}
 \begin{figure}[]
 	\centering
 	\includegraphics[scale=.6]{node_action.png}
 	\caption{node action state}
+	\label{node_action}
 \end{figure}
 
 \item \textbf{GotoTargetNode}\\
-It takes the robot to the target node tx,ty (figure 1.7). To use it, just give the values to tx and ty. After that, raise an event \textit{gotoxy}. It will take the robot to the target coordinates in the grid. It contains substates 
-	 \textit{Idle, NodeAction, GoingToNextNode} (figure 1.8). 
+It takes the robot to the target node tx,ty (figure \ref{GoToTargetNode}). To use it, just give the values to tx and ty. After that, raise an event \textit{gotoxy}. It will take the robot to the target coordinates in the grid. It contains substates 
+	 \textit{Idle, NodeAction, GoingToNextNode} as shown in figure \ref{node_action}. 
 \begin{enumerate}
 \item  Idle state.\\
 When \textit{GotoTargetNode} is not being used, it remains in the \textit{Idle} state. When event \textit{gotoxy} is raised, it moves to \textit{NodeAction} state
@@ -219,21 +226,24 @@ It takes the appropriate action at particular node for going to next node. If ta
 When system enters this state, it Turns on the line follower. Robot starts following the line until the next node is reached. When next node is reached, it stops the line follower, updates the coordinates and goes to \textit{NodeAction} State.
 \end{enumerate}
 \item \textbf{Main}\\ 
-It is \textit{main} state machine which uses all other state machines to accomplish the task. Initially it enters start state and it starts the line follower. As a node is detected, line follower is stopped. The target coordinates are fetched from c function and event \textit{gotoxy} is raised.
+It is \textit{main} state machine which uses all other state machines to accomplish the task (figure \ref{main}). Initially it enters start state and it starts the line follower. As a node is detected, line follower is stopped. The target coordinates are fetched from c function and event \textit{gotoxy} is raised.
 	\begin{figure}[]
 	\centering
 	\includegraphics[scale=.8]{main.png}
 	\caption{main machine}
-\end{figure} 
-Now it is in \textit{go to pick node} state. When the target node is reached, it enters \textit{picking} state (figure 1.10). In \textit{picking} state, robot starts following the line and when some distance is reached, it picks the number. After a node is detected, it updates the coordinates, stops the line follower and exits the \textit{picking} state. It enters the \textit{going in middle of d1} state where it gives target coordinate as ty=2 and raises \textit{gotoxy} to reach to the middle of the grid d1. When it is reached, it gets next target coordinates and enters \textit{going to drop node} state. Here, it raises \textit{gotoxy}. The robot is now going towards drop node. When it reaches there, it goes to \textit{dropping} state (figure 1.11). This state is similar to \textit{picking} state except that it will drop the number at a certain distance. 
+	\label{main}
+	\end{figure} 
+Now it is in \textit{go to pick node} state. When the target node is reached, it enters \textit{picking} state (figure \ref{picking}). In \textit{picking} state, robot starts following the line and when some distance is reached, it picks the number. After a node is detected, it updates the coordinates, stops the line follower and exits the \textit{picking} state. It enters the \textit{going in middle of d1} state where it gives target coordinate as ty=2 and raises \textit{gotoxy} to reach to the middle of the grid d1. When it is reached, it gets next target coordinates and enters \textit{going to drop node} state. Here, it raises \textit{gotoxy}. The robot is now going towards drop node. When it reaches there, it goes to \textit{dropping} state (figure \ref{dropping}). This state is similar to \textit{picking} state except that it will drop the number at a certain distance. 
 	\begin{figure}[]
 	\begin{minipage}{0.45\textwidth}
 	\includegraphics[scale=.6]{picking.png}
 \caption{picking state}
+\label{picking}
 	\end{minipage}
 \begin{minipage}{0.45\textwidth}
 	\includegraphics[scale=.6]{dropping.png}
 \caption{dropping state}
+\label{dropping}
 \end{minipage}
 
 \end{figure} 
