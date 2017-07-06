@@ -1,0 +1,23 @@
+package org.yakindu.scr.buzzer;
+
+import org.yakindu.scr.IStatemachine;
+
+public interface IBuzzerStatemachine extends IStatemachine {
+
+	public interface SCIInput {
+	
+		public void setSCIInputOperationCallback(SCIInputOperationCallback operationCallback);
+	
+	}
+	
+	public interface SCIInputOperationCallback {
+	
+		public void buzzer_on();
+		
+		public void buzzer_off();
+		
+	}
+	
+	public SCIInput getSCIInput();
+	
+}

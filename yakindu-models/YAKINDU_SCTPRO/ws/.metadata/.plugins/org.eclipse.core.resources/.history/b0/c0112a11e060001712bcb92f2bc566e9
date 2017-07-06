@@ -1,0 +1,2797 @@
+package org.yakindu.scr.puzzle_solver;
+
+public class Puzzle_solverStatemachine implements IPuzzle_solverStatemachine {
+
+	protected class SCIInputImpl implements SCIInput {
+	
+		private SCIInputOperationCallback operationCallback;
+		
+		public void setSCIInputOperationCallback(
+				SCIInputOperationCallback operationCallback) {
+			this.operationCallback = operationCallback;
+		}
+		private long left_sensor;
+		
+		public long getLeft_sensor() {
+			return left_sensor;
+		}
+		
+		public void setLeft_sensor(long value) {
+			this.left_sensor = value;
+		}
+		
+		private long right_sensor;
+		
+		public long getRight_sensor() {
+			return right_sensor;
+		}
+		
+		public void setRight_sensor(long value) {
+			this.right_sensor = value;
+		}
+		
+		private long center_sensor;
+		
+		public long getCenter_sensor() {
+			return center_sensor;
+		}
+		
+		public void setCenter_sensor(long value) {
+			this.center_sensor = value;
+		}
+		
+		private long node;
+		
+		public long getNode() {
+			return node;
+		}
+		
+		public void setNode(long value) {
+			this.node = value;
+		}
+		
+		private boolean isnode;
+		
+		public boolean getIsnode() {
+			return isnode;
+		}
+		
+		public void setIsnode(boolean value) {
+			this.isnode = value;
+		}
+		
+		private boolean left_sensed_line;
+		
+		public boolean getLeft_sensed_line() {
+			return left_sensed_line;
+		}
+		
+		public void setLeft_sensed_line(boolean value) {
+			this.left_sensed_line = value;
+		}
+		
+		private boolean center_sensed_line;
+		
+		public boolean getCenter_sensed_line() {
+			return center_sensed_line;
+		}
+		
+		public void setCenter_sensed_line(boolean value) {
+			this.center_sensed_line = value;
+		}
+		
+		private boolean right_sensed_line;
+		
+		public boolean getRight_sensed_line() {
+			return right_sensed_line;
+		}
+		
+		public void setRight_sensed_line(boolean value) {
+			this.right_sensed_line = value;
+		}
+		
+		private long distance;
+		
+		public long getDistance() {
+			return distance;
+		}
+		
+		public void setDistance(long value) {
+			this.distance = value;
+		}
+		
+		private long num;
+		
+		public long getNum() {
+			return num;
+		}
+		
+		public void setNum(long value) {
+			this.num = value;
+		}
+		
+		private long x;
+		
+		public long getX() {
+			return x;
+		}
+		
+		public void setX(long value) {
+			this.x = value;
+		}
+		
+		private long y;
+		
+		public long getY() {
+			return y;
+		}
+		
+		public void setY(long value) {
+			this.y = value;
+		}
+		
+	}
+	
+	protected SCIInputImpl sCIInput;
+	
+	private boolean initialized = false;
+	
+	public enum State {
+		main_PuzzleSolver,
+		main_PuzzleSolver_main_start,
+		main_PuzzleSolver_main_go_to_pick_node,
+		main_PuzzleSolver_main_picking,
+		main_PuzzleSolver_main_picking_picking_going_to_middle_of_segment,
+		main_PuzzleSolver_main_picking_picking_at_middle_of_segment,
+		main_PuzzleSolver_main_going_in_middle_of_d1,
+		main_PuzzleSolver_main_going_to_drop_node,
+		main_PuzzleSolver_main_dropping,
+		main_PuzzleSolver_main_dropping_dropping_going_to_middle_of_segment,
+		main_PuzzleSolver_main_dropping_dropping_at_middle_of_segment,
+		main_PuzzleSolver_main_going_in_middle_of_d2,
+		main_PuzzleSolver_GotoTargetNode_GoingToNextNode,
+		main_PuzzleSolver_GotoTargetNode_NodeAction,
+		main_PuzzleSolver_GotoTargetNode_NodeAction_ToNextNode_NodeActionInProgress,
+		main_PuzzleSolver_GotoTargetNode_NodeAction_ToNextNode_StartNodeAction,
+		main_PuzzleSolver_GotoTargetNode_Idle,
+		main_PuzzleSolver_Coordinates_Coordinates,
+		main_PuzzleSolver_LineFollower_LineFollowerOn,
+		main_PuzzleSolver_LineFollower_LineFollowerOn_s_AllSensorDetectWhite,
+		main_PuzzleSolver_LineFollower_LineFollowerOn_s_Composite_RightSensorOnLine_LeftSensorOnLine_CenterSensorOnLine,
+		main_PuzzleSolver_LineFollower_LineFollowerOn_s_Composite_RightSensorOnLine_LeftSensorOnLine_CenterSensorOnLine_inner_region_RightSensorOnLine,
+		main_PuzzleSolver_LineFollower_LineFollowerOn_s_Composite_RightSensorOnLine_LeftSensorOnLine_CenterSensorOnLine_inner_region_LeftSensorOnLine,
+		main_PuzzleSolver_LineFollower_LineFollowerOn_s_Composite_RightSensorOnLine_LeftSensorOnLine_CenterSensorOnLine_inner_region_CenterSensorOnLine,
+		main_PuzzleSolver_LineFollower_LineFollowerOff,
+		main_PuzzleSolver_Orientation_East,
+		main_PuzzleSolver_Orientation_West,
+		main_PuzzleSolver_Orientation_North,
+		main_PuzzleSolver_Orientation_South,
+		main_PuzzleSolver_Turn_TurningOn,
+		main_PuzzleSolver_Turn_TurningOn_ss_GoingForward,
+		main_PuzzleSolver_Turn_TurningOn_ss_TurningLeft,
+		main_PuzzleSolver_Turn_TurningOn_ss_TurningRight,
+		main_PuzzleSolver_Turn_TurningOn_ss_TurningBack,
+		main_PuzzleSolver_Turn_TurningOff,
+		main_stop,
+		$NullState$
+	};
+	
+	private final State[] stateVector = new State[6];
+	
+	private int nextStateIndex;
+	
+	private boolean startLineFollower;
+	
+	private boolean stopLineFollower;
+	
+	private boolean startTurning;
+	
+	private boolean orientInEast;
+	
+	private boolean orientInWest;
+	
+	private boolean orientInNorth;
+	
+	private boolean orientInSouth;
+	
+	private boolean back;
+	
+	private boolean left;
+	
+	private boolean right;
+	
+	private boolean front;
+	
+	private boolean updateCoordinates;
+	
+	private boolean gotoxy;
+	
+	private String turn;
+	
+	protected void setTurn(String value) {
+		turn = value;
+	}
+	
+	protected String getTurn() {
+		return turn;
+	}
+	
+	private long x;
+	
+	protected void setX(long value) {
+		x = value;
+	}
+	
+	protected long getX() {
+		return x;
+	}
+	
+	private long y;
+	
+	protected void setY(long value) {
+		y = value;
+	}
+	
+	protected long getY() {
+		return y;
+	}
+	
+	private long tx;
+	
+	protected void setTx(long value) {
+		tx = value;
+	}
+	
+	protected long getTx() {
+		return tx;
+	}
+	
+	private long ty;
+	
+	protected void setTy(long value) {
+		ty = value;
+	}
+	
+	protected long getTy() {
+		return ty;
+	}
+	
+	public Puzzle_solverStatemachine() {
+		sCIInput = new SCIInputImpl();
+	}
+	
+	public void init() {
+		this.initialized = true;
+		for (int i = 0; i < 6; i++) {
+			stateVector[i] = State.$NullState$;
+		}
+		clearEvents();
+		clearOutEvents();
+		setTurn("forward");
+		
+		setX(1);
+		
+		setY(0);
+		
+		setTx(0);
+		
+		setTy(0);
+		
+		sCIInput.setLeft_sensor(0);
+		
+		sCIInput.setRight_sensor(0);
+		
+		sCIInput.setCenter_sensor(0);
+		
+		sCIInput.setNode(0);
+		
+		sCIInput.setIsnode(false);
+		
+		sCIInput.setLeft_sensed_line(false);
+		
+		sCIInput.setCenter_sensed_line(false);
+		
+		sCIInput.setRight_sensed_line(false);
+		
+		sCIInput.setDistance(0);
+		
+		sCIInput.setNum(0);
+		
+		sCIInput.setX(0);
+		
+		sCIInput.setY(0);
+	}
+	
+	public void enter() {
+		if (!initialized) {
+			throw new IllegalStateException(
+					"The state machine needs to be initialized first by calling the init() function.");
+		}
+		enterSequence_main_default();
+	}
+	
+	public void exit() {
+		exitSequence_main();
+	}
+	
+	/**
+	 * @see IStatemachine#isActive()
+	 */
+	public boolean isActive() {
+		return stateVector[0] != State.$NullState$||stateVector[1] != State.$NullState$||stateVector[2] != State.$NullState$||stateVector[3] != State.$NullState$||stateVector[4] != State.$NullState$||stateVector[5] != State.$NullState$;
+	}
+	
+	/** 
+	* Always returns 'false' since this state machine can never become final.
+	*
+	* @see IStatemachine#isFinal()
+	*/
+	public boolean isFinal() {
+		return false;
+	}
+	/**
+	* This method resets the incoming events (time events included).
+	*/
+	protected void clearEvents() {
+		startLineFollower = false;
+		stopLineFollower = false;
+		startTurning = false;
+		orientInEast = false;
+		orientInWest = false;
+		orientInNorth = false;
+		orientInSouth = false;
+		back = false;
+		left = false;
+		right = false;
+		front = false;
+		updateCoordinates = false;
+		gotoxy = false;
+	}
+	
+	/**
+	* This method resets the outgoing events.
+	*/
+	protected void clearOutEvents() {
+	}
+	
+	/**
+	* Returns true if the given state is currently active otherwise false.
+	*/
+	public boolean isStateActive(State state) {
+	
+		switch (state) {
+		case main_PuzzleSolver:
+			return stateVector[0].ordinal() >= State.
+					main_PuzzleSolver.ordinal()&& stateVector[0].ordinal() <= State.main_PuzzleSolver_Turn_TurningOff.ordinal();
+		case main_PuzzleSolver_main_start:
+			return stateVector[0] == State.main_PuzzleSolver_main_start;
+		case main_PuzzleSolver_main_go_to_pick_node:
+			return stateVector[0] == State.main_PuzzleSolver_main_go_to_pick_node;
+		case main_PuzzleSolver_main_picking:
+			return stateVector[0].ordinal() >= State.
+					main_PuzzleSolver_main_picking.ordinal()&& stateVector[0].ordinal() <= State.main_PuzzleSolver_main_picking_picking_at_middle_of_segment.ordinal();
+		case main_PuzzleSolver_main_picking_picking_going_to_middle_of_segment:
+			return stateVector[0] == State.main_PuzzleSolver_main_picking_picking_going_to_middle_of_segment;
+		case main_PuzzleSolver_main_picking_picking_at_middle_of_segment:
+			return stateVector[0] == State.main_PuzzleSolver_main_picking_picking_at_middle_of_segment;
+		case main_PuzzleSolver_main_going_in_middle_of_d1:
+			return stateVector[0] == State.main_PuzzleSolver_main_going_in_middle_of_d1;
+		case main_PuzzleSolver_main_going_to_drop_node:
+			return stateVector[0] == State.main_PuzzleSolver_main_going_to_drop_node;
+		case main_PuzzleSolver_main_dropping:
+			return stateVector[0].ordinal() >= State.
+					main_PuzzleSolver_main_dropping.ordinal()&& stateVector[0].ordinal() <= State.main_PuzzleSolver_main_dropping_dropping_at_middle_of_segment.ordinal();
+		case main_PuzzleSolver_main_dropping_dropping_going_to_middle_of_segment:
+			return stateVector[0] == State.main_PuzzleSolver_main_dropping_dropping_going_to_middle_of_segment;
+		case main_PuzzleSolver_main_dropping_dropping_at_middle_of_segment:
+			return stateVector[0] == State.main_PuzzleSolver_main_dropping_dropping_at_middle_of_segment;
+		case main_PuzzleSolver_main_going_in_middle_of_d2:
+			return stateVector[0] == State.main_PuzzleSolver_main_going_in_middle_of_d2;
+		case main_PuzzleSolver_GotoTargetNode_GoingToNextNode:
+			return stateVector[1] == State.main_PuzzleSolver_GotoTargetNode_GoingToNextNode;
+		case main_PuzzleSolver_GotoTargetNode_NodeAction:
+			return stateVector[1].ordinal() >= State.
+					main_PuzzleSolver_GotoTargetNode_NodeAction.ordinal()&& stateVector[1].ordinal() <= State.main_PuzzleSolver_GotoTargetNode_NodeAction_ToNextNode_StartNodeAction.ordinal();
+		case main_PuzzleSolver_GotoTargetNode_NodeAction_ToNextNode_NodeActionInProgress:
+			return stateVector[1] == State.main_PuzzleSolver_GotoTargetNode_NodeAction_ToNextNode_NodeActionInProgress;
+		case main_PuzzleSolver_GotoTargetNode_NodeAction_ToNextNode_StartNodeAction:
+			return stateVector[1] == State.main_PuzzleSolver_GotoTargetNode_NodeAction_ToNextNode_StartNodeAction;
+		case main_PuzzleSolver_GotoTargetNode_Idle:
+			return stateVector[1] == State.main_PuzzleSolver_GotoTargetNode_Idle;
+		case main_PuzzleSolver_Coordinates_Coordinates:
+			return stateVector[2] == State.main_PuzzleSolver_Coordinates_Coordinates;
+		case main_PuzzleSolver_LineFollower_LineFollowerOn:
+			return stateVector[3].ordinal() >= State.
+					main_PuzzleSolver_LineFollower_LineFollowerOn.ordinal()&& stateVector[3].ordinal() <= State.main_PuzzleSolver_LineFollower_LineFollowerOn_s_Composite_RightSensorOnLine_LeftSensorOnLine_CenterSensorOnLine_inner_region_CenterSensorOnLine.ordinal();
+		case main_PuzzleSolver_LineFollower_LineFollowerOn_s_AllSensorDetectWhite:
+			return stateVector[3] == State.main_PuzzleSolver_LineFollower_LineFollowerOn_s_AllSensorDetectWhite;
+		case main_PuzzleSolver_LineFollower_LineFollowerOn_s_Composite_RightSensorOnLine_LeftSensorOnLine_CenterSensorOnLine:
+			return stateVector[3].ordinal() >= State.
+					main_PuzzleSolver_LineFollower_LineFollowerOn_s_Composite_RightSensorOnLine_LeftSensorOnLine_CenterSensorOnLine.ordinal()&& stateVector[3].ordinal() <= State.main_PuzzleSolver_LineFollower_LineFollowerOn_s_Composite_RightSensorOnLine_LeftSensorOnLine_CenterSensorOnLine_inner_region_CenterSensorOnLine.ordinal();
+		case main_PuzzleSolver_LineFollower_LineFollowerOn_s_Composite_RightSensorOnLine_LeftSensorOnLine_CenterSensorOnLine_inner_region_RightSensorOnLine:
+			return stateVector[3] == State.main_PuzzleSolver_LineFollower_LineFollowerOn_s_Composite_RightSensorOnLine_LeftSensorOnLine_CenterSensorOnLine_inner_region_RightSensorOnLine;
+		case main_PuzzleSolver_LineFollower_LineFollowerOn_s_Composite_RightSensorOnLine_LeftSensorOnLine_CenterSensorOnLine_inner_region_LeftSensorOnLine:
+			return stateVector[3] == State.main_PuzzleSolver_LineFollower_LineFollowerOn_s_Composite_RightSensorOnLine_LeftSensorOnLine_CenterSensorOnLine_inner_region_LeftSensorOnLine;
+		case main_PuzzleSolver_LineFollower_LineFollowerOn_s_Composite_RightSensorOnLine_LeftSensorOnLine_CenterSensorOnLine_inner_region_CenterSensorOnLine:
+			return stateVector[3] == State.main_PuzzleSolver_LineFollower_LineFollowerOn_s_Composite_RightSensorOnLine_LeftSensorOnLine_CenterSensorOnLine_inner_region_CenterSensorOnLine;
+		case main_PuzzleSolver_LineFollower_LineFollowerOff:
+			return stateVector[3] == State.main_PuzzleSolver_LineFollower_LineFollowerOff;
+		case main_PuzzleSolver_Orientation_East:
+			return stateVector[4] == State.main_PuzzleSolver_Orientation_East;
+		case main_PuzzleSolver_Orientation_West:
+			return stateVector[4] == State.main_PuzzleSolver_Orientation_West;
+		case main_PuzzleSolver_Orientation_North:
+			return stateVector[4] == State.main_PuzzleSolver_Orientation_North;
+		case main_PuzzleSolver_Orientation_South:
+			return stateVector[4] == State.main_PuzzleSolver_Orientation_South;
+		case main_PuzzleSolver_Turn_TurningOn:
+			return stateVector[5].ordinal() >= State.
+					main_PuzzleSolver_Turn_TurningOn.ordinal()&& stateVector[5].ordinal() <= State.main_PuzzleSolver_Turn_TurningOn_ss_TurningBack.ordinal();
+		case main_PuzzleSolver_Turn_TurningOn_ss_GoingForward:
+			return stateVector[5] == State.main_PuzzleSolver_Turn_TurningOn_ss_GoingForward;
+		case main_PuzzleSolver_Turn_TurningOn_ss_TurningLeft:
+			return stateVector[5] == State.main_PuzzleSolver_Turn_TurningOn_ss_TurningLeft;
+		case main_PuzzleSolver_Turn_TurningOn_ss_TurningRight:
+			return stateVector[5] == State.main_PuzzleSolver_Turn_TurningOn_ss_TurningRight;
+		case main_PuzzleSolver_Turn_TurningOn_ss_TurningBack:
+			return stateVector[5] == State.main_PuzzleSolver_Turn_TurningOn_ss_TurningBack;
+		case main_PuzzleSolver_Turn_TurningOff:
+			return stateVector[5] == State.main_PuzzleSolver_Turn_TurningOff;
+		case main_stop:
+			return stateVector[0] == State.main_stop;
+		default:
+			return false;
+		}
+	}
+	
+	public SCIInput getSCIInput() {
+		return sCIInput;
+	}
+	
+	private void raiseStartLineFollower() {
+		startLineFollower = true;
+	}
+	
+	private void raiseStopLineFollower() {
+		stopLineFollower = true;
+	}
+	
+	private void raiseStartTurning() {
+		startTurning = true;
+	}
+	
+	private void raiseOrientInEast() {
+		orientInEast = true;
+	}
+	
+	private void raiseOrientInWest() {
+		orientInWest = true;
+	}
+	
+	private void raiseOrientInNorth() {
+		orientInNorth = true;
+	}
+	
+	private void raiseOrientInSouth() {
+		orientInSouth = true;
+	}
+	
+	private void raiseBack() {
+		back = true;
+	}
+	
+	private void raiseLeft() {
+		left = true;
+	}
+	
+	private void raiseRight() {
+		right = true;
+	}
+	
+	private void raiseFront() {
+		front = true;
+	}
+	
+	private void raiseUpdateCoordinates() {
+		updateCoordinates = true;
+	}
+	
+	private void raiseGotoxy() {
+		gotoxy = true;
+	}
+	
+	private boolean check_main_PuzzleSolver_main_start_tr0_tr0() {
+		return sCIInput.getIsnode();
+	}
+	
+	private boolean check_main_PuzzleSolver_main_go_to_pick_node_tr0_tr0() {
+		return isStateActive(State.main_PuzzleSolver_GotoTargetNode_Idle);
+	}
+	
+	private boolean check_main_PuzzleSolver_main_picking_picking_going_to_middle_of_segment_tr0_tr0() {
+		return sCIInput.getDistance()>20;
+	}
+	
+	private boolean check_main_PuzzleSolver_main_picking_picking_at_middle_of_segment_tr0_tr0() {
+		return sCIInput.getIsnode();
+	}
+	
+	private boolean check_main_PuzzleSolver_main_going_in_middle_of_d1_tr0_tr0() {
+		return isStateActive(State.main_PuzzleSolver_GotoTargetNode_Idle);
+	}
+	
+	private boolean check_main_PuzzleSolver_main_going_to_drop_node_tr0_tr0() {
+		return isStateActive(State.main_PuzzleSolver_GotoTargetNode_Idle);
+	}
+	
+	private boolean check_main_PuzzleSolver_main_dropping_dropping_going_to_middle_of_segment_tr0_tr0() {
+		return sCIInput.getDistance()>20;
+	}
+	
+	private boolean check_main_PuzzleSolver_main_dropping_dropping_at_middle_of_segment_tr0_tr0() {
+		return sCIInput.getIsnode();
+	}
+	
+	private boolean check_main_PuzzleSolver_main_going_in_middle_of_d2_tr0_tr0() {
+		return isStateActive(State.main_PuzzleSolver_GotoTargetNode_Idle);
+	}
+	
+	private boolean check_main_PuzzleSolver_GotoTargetNode_GoingToNextNode_tr0_tr0() {
+		return sCIInput.getIsnode();
+	}
+	
+	private boolean check_main_PuzzleSolver_GotoTargetNode_NodeAction_ToNextNode_NodeActionInProgress_tr0_tr0() {
+		return isStateActive(State.main_PuzzleSolver_Turn_TurningOff);
+	}
+	
+	private boolean check_main_PuzzleSolver_GotoTargetNode_NodeAction_ToNextNode_StartNodeAction_tr0_tr0() {
+		return true;
+	}
+	
+	private boolean check_main_PuzzleSolver_GotoTargetNode_Idle_tr0_tr0() {
+		return gotoxy;
+	}
+	
+	private boolean check_main_PuzzleSolver_Coordinates_Coordinates_tr0_tr0() {
+		return updateCoordinates;
+	}
+	
+	private boolean check_main_PuzzleSolver_LineFollower_LineFollowerOn_tr0_tr0() {
+		return stopLineFollower;
+	}
+	
+	private boolean check_main_PuzzleSolver_LineFollower_LineFollowerOn_s_AllSensorDetectWhite_tr0_tr0() {
+		return sCIInput.getLeft_sensor()>40;
+	}
+	
+	private boolean check_main_PuzzleSolver_LineFollower_LineFollowerOn_s_AllSensorDetectWhite_tr1_tr1() {
+		return sCIInput.getRight_sensor()>40;
+	}
+	
+	private boolean check_main_PuzzleSolver_LineFollower_LineFollowerOn_s_AllSensorDetectWhite_tr2_tr2() {
+		return sCIInput.getCenter_sensor()>40;
+	}
+	
+	private boolean check_main_PuzzleSolver_LineFollower_LineFollowerOn_s_AllSensorDetectWhite_tr3_tr3() {
+		return sCIInput.getLeft_sensor()>40;
+	}
+	
+	private boolean check_main_PuzzleSolver_LineFollower_LineFollowerOn_s_Composite_RightSensorOnLine_LeftSensorOnLine_CenterSensorOnLine_tr0_tr0() {
+		return sCIInput.getIsnode() || (sCIInput.getLeft_sensor()<40 && sCIInput.getCenter_sensor()<40 && sCIInput.getRight_sensor()<40);
+	}
+	
+	private boolean check_main_PuzzleSolver_LineFollower_LineFollowerOn_s_Composite_RightSensorOnLine_LeftSensorOnLine_CenterSensorOnLine_inner_region_RightSensorOnLine_tr0_tr0() {
+		return sCIInput.getCenter_sensor()>40;
+	}
+	
+	private boolean check_main_PuzzleSolver_LineFollower_LineFollowerOn_s_Composite_RightSensorOnLine_LeftSensorOnLine_CenterSensorOnLine_inner_region_LeftSensorOnLine_tr0_tr0() {
+		return sCIInput.getCenter_sensor()>40;
+	}
+	
+	private boolean check_main_PuzzleSolver_LineFollower_LineFollowerOn_s_Composite_RightSensorOnLine_LeftSensorOnLine_CenterSensorOnLine_inner_region_CenterSensorOnLine_tr0_tr0() {
+		return sCIInput.getLeft_sensor()>40;
+	}
+	
+	private boolean check_main_PuzzleSolver_LineFollower_LineFollowerOn_s_Composite_RightSensorOnLine_LeftSensorOnLine_CenterSensorOnLine_inner_region_CenterSensorOnLine_tr1_tr1() {
+		return sCIInput.getRight_sensor()>40;
+	}
+	
+	private boolean check_main_PuzzleSolver_LineFollower_LineFollowerOff_tr0_tr0() {
+		return startLineFollower;
+	}
+	
+	private boolean check_main_PuzzleSolver_Orientation_East_tr0_tr0() {
+		return right || orientInSouth;
+	}
+	
+	private boolean check_main_PuzzleSolver_Orientation_East_tr1_tr1() {
+		return left || orientInNorth;
+	}
+	
+	private boolean check_main_PuzzleSolver_Orientation_East_tr2_tr2() {
+		return back || orientInWest;
+	}
+	
+	private boolean check_main_PuzzleSolver_Orientation_East_tr3_tr3() {
+		return front || orientInEast;
+	}
+	
+	private boolean check_main_PuzzleSolver_Orientation_West_tr0_tr0() {
+		return right || orientInNorth;
+	}
+	
+	private boolean check_main_PuzzleSolver_Orientation_West_tr1_tr1() {
+		return left || orientInSouth;
+	}
+	
+	private boolean check_main_PuzzleSolver_Orientation_West_tr2_tr2() {
+		return back || orientInEast;
+	}
+	
+	private boolean check_main_PuzzleSolver_Orientation_West_tr3_tr3() {
+		return front || orientInWest;
+	}
+	
+	private boolean check_main_PuzzleSolver_Orientation_North_tr0_tr0() {
+		return right || orientInEast;
+	}
+	
+	private boolean check_main_PuzzleSolver_Orientation_North_tr1_tr1() {
+		return left || orientInWest;
+	}
+	
+	private boolean check_main_PuzzleSolver_Orientation_North_tr2_tr2() {
+		return back || orientInSouth;
+	}
+	
+	private boolean check_main_PuzzleSolver_Orientation_North_tr3_tr3() {
+		return front || orientInNorth;
+	}
+	
+	private boolean check_main_PuzzleSolver_Orientation_South_tr0_tr0() {
+		return right || orientInWest;
+	}
+	
+	private boolean check_main_PuzzleSolver_Orientation_South_tr1_tr1() {
+		return left || orientInEast;
+	}
+	
+	private boolean check_main_PuzzleSolver_Orientation_South_tr2_tr2() {
+		return back || orientInNorth;
+	}
+	
+	private boolean check_main_PuzzleSolver_Orientation_South_tr3_tr3() {
+		return front || orientInSouth;
+	}
+	
+	private boolean check_main_PuzzleSolver_Turn_TurningOn_ss_GoingForward_tr0_tr0() {
+		return !sCIInput.getIsnode();
+	}
+	
+	private boolean check_main_PuzzleSolver_Turn_TurningOn_ss_TurningLeft_tr0_tr0() {
+		return sCIInput.getLeft_sensed_line();
+	}
+	
+	private boolean check_main_PuzzleSolver_Turn_TurningOn_ss_TurningRight_tr0_tr0() {
+		return sCIInput.getCenter_sensed_line();
+	}
+	
+	private boolean check_main_PuzzleSolver_Turn_TurningOn_ss_TurningBack_tr0_tr0() {
+		return sCIInput.getCenter_sensed_line();
+	}
+	
+	private boolean check_main_PuzzleSolver_Turn_TurningOff_tr0_tr0() {
+		return startTurning;
+	}
+	
+	private boolean check_main_PuzzleSolver_main__choice_0_tr1_tr1() {
+		return sCIInput.getNum()==-1;
+	}
+	
+	private boolean check_main_PuzzleSolver_main__choice_0_tr0() {
+		return true;
+	}
+	
+	private boolean check_main_PuzzleSolver_GotoTargetNode_NodeAction_ToNextNode__choice_0_tr0_tr0() {
+		return getTx()>getX();
+	}
+	
+	private boolean check_main_PuzzleSolver_GotoTargetNode_NodeAction_ToNextNode__choice_0_tr1_tr1() {
+		return getTx()<getX();
+	}
+	
+	private boolean check_main_PuzzleSolver_GotoTargetNode_NodeAction_ToNextNode__choice_0_tr2() {
+		return true;
+	}
+	
+	private boolean check_main_PuzzleSolver_GotoTargetNode_NodeAction_ToNextNode__choice_1_tr0_tr0() {
+		return getTy()>getY();
+	}
+	
+	private boolean check_main_PuzzleSolver_GotoTargetNode_NodeAction_ToNextNode__choice_1_tr1_tr1() {
+		return getTy()<getY();
+	}
+	
+	private boolean check_main_PuzzleSolver_GotoTargetNode_NodeAction_ToNextNode__choice_1_tr3() {
+		return true;
+	}
+	
+	private boolean check_main_PuzzleSolver_GotoTargetNode_NodeAction_ToNextNode__choice_1_tr2() {
+		return true;
+	}
+	
+	private boolean check_main_PuzzleSolver_Coordinates__choice_0_tr0_tr0() {
+		return isStateActive(State.main_PuzzleSolver_Orientation_East);
+	}
+	
+	private boolean check_main_PuzzleSolver_Coordinates__choice_0_tr1_tr1() {
+		return isStateActive(State.main_PuzzleSolver_Orientation_West);
+	}
+	
+	private boolean check_main_PuzzleSolver_Coordinates__choice_0_tr2_tr2() {
+		return isStateActive(State.main_PuzzleSolver_Orientation_North);
+	}
+	
+	private boolean check_main_PuzzleSolver_Coordinates__choice_0_tr3_tr3() {
+		return isStateActive(State.main_PuzzleSolver_Orientation_South);
+	}
+	
+	private boolean check_main_PuzzleSolver_Coordinates__choice_0_tr4() {
+		return true;
+	}
+	
+	private boolean check_main_PuzzleSolver_Turn_TurningOn_ss__choice_0_tr0_tr0() {
+		return (getTurn()== null?"forward" ==null :getTurn().equals("forward"));
+	}
+	
+	private boolean check_main_PuzzleSolver_Turn_TurningOn_ss__choice_0_tr1_tr1() {
+		return (getTurn()== null?"left" ==null :getTurn().equals("left"));
+	}
+	
+	private boolean check_main_PuzzleSolver_Turn_TurningOn_ss__choice_0_tr2_tr2() {
+		return (getTurn()== null?"right" ==null :getTurn().equals("right"));
+	}
+	
+	private boolean check_main_PuzzleSolver_Turn_TurningOn_ss__choice_0_tr3_tr3() {
+		return (getTurn()== null?"back" ==null :getTurn().equals("back"));
+	}
+	
+	private boolean check_main_PuzzleSolver_Turn_TurningOn_ss__choice_0_tr4() {
+		return true;
+	}
+	
+	private void effect_main_PuzzleSolver_tr0() {
+		exitSequence_main_PuzzleSolver();
+		enterSequence_main_stop_default();
+	}
+	
+	private void effect_main_PuzzleSolver_main_start_tr0() {
+		exitSequence_main_PuzzleSolver_main_start();
+		raiseStopLineFollower();
+		
+		sCIInput.operationCallback.get_target();
+		
+		setTx(sCIInput.x);
+		
+		setTy(sCIInput.y);
+		
+		raiseGotoxy();
+		
+		enterSequence_main_PuzzleSolver_main_go_to_pick_node_default();
+	}
+	
+	private void effect_main_PuzzleSolver_main_go_to_pick_node_tr0() {
+		exitSequence_main_PuzzleSolver_main_go_to_pick_node();
+		enterSequence_main_PuzzleSolver_main_picking_default();
+	}
+	
+	private void effect_main_PuzzleSolver_main_picking_tr0() {
+		exitSequence_main_PuzzleSolver_main_picking();
+		enterSequence_main_PuzzleSolver_main_going_in_middle_of_d1_default();
+	}
+	
+	private void effect_main_PuzzleSolver_main_picking_picking_going_to_middle_of_segment_tr0() {
+		exitSequence_main_PuzzleSolver_main_picking_picking_going_to_middle_of_segment();
+		sCIInput.operationCallback.buzzer_on();
+		
+		enterSequence_main_PuzzleSolver_main_picking_picking_at_middle_of_segment_default();
+	}
+	
+	private void effect_main_PuzzleSolver_main_picking_picking_at_middle_of_segment_tr0() {
+		exitSequence_main_PuzzleSolver_main_picking_picking_at_middle_of_segment();
+		sCIInput.operationCallback.break_ID(50);
+		
+		raiseUpdateCoordinates();
+		
+		raiseStopLineFollower();
+		
+		react_main_PuzzleSolver_main_picking_picking__exit_Default();
+	}
+	
+	private void effect_main_PuzzleSolver_main_going_in_middle_of_d1_tr0() {
+		exitSequence_main_PuzzleSolver_main_going_in_middle_of_d1();
+		sCIInput.operationCallback.get_target();
+		
+		setTx(sCIInput.x);
+		
+		setTy(sCIInput.y);
+		
+		enterSequence_main_PuzzleSolver_main_going_to_drop_node_default();
+	}
+	
+	private void effect_main_PuzzleSolver_main_going_to_drop_node_tr0() {
+		exitSequence_main_PuzzleSolver_main_going_to_drop_node();
+		enterSequence_main_PuzzleSolver_main_dropping_default();
+	}
+	
+	private void effect_main_PuzzleSolver_main_dropping_tr0() {
+		exitSequence_main_PuzzleSolver_main_dropping();
+		react_main_PuzzleSolver_main__choice_0();
+	}
+	
+	private void effect_main_PuzzleSolver_main_dropping_dropping_going_to_middle_of_segment_tr0() {
+		exitSequence_main_PuzzleSolver_main_dropping_dropping_going_to_middle_of_segment();
+		sCIInput.operationCallback.buzzer_on();
+		
+		enterSequence_main_PuzzleSolver_main_dropping_dropping_at_middle_of_segment_default();
+	}
+	
+	private void effect_main_PuzzleSolver_main_dropping_dropping_at_middle_of_segment_tr0() {
+		exitSequence_main_PuzzleSolver_main_dropping_dropping_at_middle_of_segment();
+		sCIInput.operationCallback.break_ID(255);
+		
+		raiseUpdateCoordinates();
+		
+		raiseStopLineFollower();
+		
+		sCIInput.operationCallback.get_target();
+		
+		react_main_PuzzleSolver_main_dropping_dropping__exit_Default();
+	}
+	
+	private void effect_main_PuzzleSolver_main_going_in_middle_of_d2_tr0() {
+		exitSequence_main_PuzzleSolver_main_going_in_middle_of_d2();
+		setTx(sCIInput.x);
+		
+		setTy(sCIInput.y);
+		
+		raiseGotoxy();
+		
+		enterSequence_main_PuzzleSolver_main_go_to_pick_node_default();
+	}
+	
+	private void effect_main_PuzzleSolver_GotoTargetNode_GoingToNextNode_tr0() {
+		exitSequence_main_PuzzleSolver_GotoTargetNode_GoingToNextNode();
+		raiseStopLineFollower();
+		
+		raiseUpdateCoordinates();
+		
+		enterSequence_main_PuzzleSolver_GotoTargetNode_NodeAction_default();
+	}
+	
+	private void effect_main_PuzzleSolver_GotoTargetNode_NodeAction_tr0() {
+		exitSequence_main_PuzzleSolver_GotoTargetNode_NodeAction();
+		enterSequence_main_PuzzleSolver_GotoTargetNode_GoingToNextNode_default();
+	}
+	
+	private void effect_main_PuzzleSolver_GotoTargetNode_NodeAction_tr1() {
+		exitSequence_main_PuzzleSolver_GotoTargetNode_NodeAction();
+		enterSequence_main_PuzzleSolver_GotoTargetNode_Idle_default();
+	}
+	
+	private void effect_main_PuzzleSolver_GotoTargetNode_NodeAction_ToNextNode_NodeActionInProgress_tr0() {
+		exitSequence_main_PuzzleSolver_GotoTargetNode_NodeAction_ToNextNode_NodeActionInProgress();
+		react_main_PuzzleSolver_GotoTargetNode_NodeAction_ToNextNode__exit_Default();
+	}
+	
+	private void effect_main_PuzzleSolver_GotoTargetNode_NodeAction_ToNextNode_StartNodeAction_tr0() {
+		exitSequence_main_PuzzleSolver_GotoTargetNode_NodeAction_ToNextNode_StartNodeAction();
+		react_main_PuzzleSolver_GotoTargetNode_NodeAction_ToNextNode__choice_0();
+	}
+	
+	private void effect_main_PuzzleSolver_GotoTargetNode_Idle_tr0() {
+		exitSequence_main_PuzzleSolver_GotoTargetNode_Idle();
+		enterSequence_main_PuzzleSolver_GotoTargetNode_NodeAction_default();
+	}
+	
+	private void effect_main_PuzzleSolver_Coordinates_Coordinates_tr0() {
+		exitSequence_main_PuzzleSolver_Coordinates_Coordinates();
+		react_main_PuzzleSolver_Coordinates__choice_0();
+	}
+	
+	private void effect_main_PuzzleSolver_LineFollower_LineFollowerOn_tr0() {
+		exitSequence_main_PuzzleSolver_LineFollower_LineFollowerOn();
+		enterSequence_main_PuzzleSolver_LineFollower_LineFollowerOff_default();
+	}
+	
+	private void effect_main_PuzzleSolver_LineFollower_LineFollowerOn_s_AllSensorDetectWhite_tr0() {
+		exitSequence_main_PuzzleSolver_LineFollower_LineFollowerOn_s_AllSensorDetectWhite();
+		enterSequence_main_PuzzleSolver_LineFollower_LineFollowerOn_s_Composite_RightSensorOnLine_LeftSensorOnLine_CenterSensorOnLine_inner_region_LeftSensorOnLine_default();
+	}
+	
+	private void effect_main_PuzzleSolver_LineFollower_LineFollowerOn_s_AllSensorDetectWhite_tr1() {
+		exitSequence_main_PuzzleSolver_LineFollower_LineFollowerOn_s_AllSensorDetectWhite();
+		enterSequence_main_PuzzleSolver_LineFollower_LineFollowerOn_s_Composite_RightSensorOnLine_LeftSensorOnLine_CenterSensorOnLine_inner_region_RightSensorOnLine_default();
+	}
+	
+	private void effect_main_PuzzleSolver_LineFollower_LineFollowerOn_s_AllSensorDetectWhite_tr2() {
+		exitSequence_main_PuzzleSolver_LineFollower_LineFollowerOn_s_AllSensorDetectWhite();
+		enterSequence_main_PuzzleSolver_LineFollower_LineFollowerOn_s_Composite_RightSensorOnLine_LeftSensorOnLine_CenterSensorOnLine_inner_region_CenterSensorOnLine_default();
+	}
+	
+	private void effect_main_PuzzleSolver_LineFollower_LineFollowerOn_s_AllSensorDetectWhite_tr3() {
+		exitSequence_main_PuzzleSolver_LineFollower_LineFollowerOn_s_AllSensorDetectWhite();
+		enterSequence_main_PuzzleSolver_LineFollower_LineFollowerOn_s_Composite_RightSensorOnLine_LeftSensorOnLine_CenterSensorOnLine_inner_region_LeftSensorOnLine_default();
+	}
+	
+	private void effect_main_PuzzleSolver_LineFollower_LineFollowerOn_s_Composite_RightSensorOnLine_LeftSensorOnLine_CenterSensorOnLine_tr0() {
+		exitSequence_main_PuzzleSolver_LineFollower_LineFollowerOn_s_Composite_RightSensorOnLine_LeftSensorOnLine_CenterSensorOnLine();
+		enterSequence_main_PuzzleSolver_LineFollower_LineFollowerOn_s_AllSensorDetectWhite_default();
+	}
+	
+	private void effect_main_PuzzleSolver_LineFollower_LineFollowerOn_s_Composite_RightSensorOnLine_LeftSensorOnLine_CenterSensorOnLine_inner_region_RightSensorOnLine_tr0() {
+		exitSequence_main_PuzzleSolver_LineFollower_LineFollowerOn_s_Composite_RightSensorOnLine_LeftSensorOnLine_CenterSensorOnLine_inner_region_RightSensorOnLine();
+		enterSequence_main_PuzzleSolver_LineFollower_LineFollowerOn_s_Composite_RightSensorOnLine_LeftSensorOnLine_CenterSensorOnLine_inner_region_CenterSensorOnLine_default();
+	}
+	
+	private void effect_main_PuzzleSolver_LineFollower_LineFollowerOn_s_Composite_RightSensorOnLine_LeftSensorOnLine_CenterSensorOnLine_inner_region_LeftSensorOnLine_tr0() {
+		exitSequence_main_PuzzleSolver_LineFollower_LineFollowerOn_s_Composite_RightSensorOnLine_LeftSensorOnLine_CenterSensorOnLine_inner_region_LeftSensorOnLine();
+		enterSequence_main_PuzzleSolver_LineFollower_LineFollowerOn_s_Composite_RightSensorOnLine_LeftSensorOnLine_CenterSensorOnLine_inner_region_CenterSensorOnLine_default();
+	}
+	
+	private void effect_main_PuzzleSolver_LineFollower_LineFollowerOn_s_Composite_RightSensorOnLine_LeftSensorOnLine_CenterSensorOnLine_inner_region_CenterSensorOnLine_tr0() {
+		exitSequence_main_PuzzleSolver_LineFollower_LineFollowerOn_s_Composite_RightSensorOnLine_LeftSensorOnLine_CenterSensorOnLine_inner_region_CenterSensorOnLine();
+		enterSequence_main_PuzzleSolver_LineFollower_LineFollowerOn_s_Composite_RightSensorOnLine_LeftSensorOnLine_CenterSensorOnLine_inner_region_LeftSensorOnLine_default();
+	}
+	
+	private void effect_main_PuzzleSolver_LineFollower_LineFollowerOn_s_Composite_RightSensorOnLine_LeftSensorOnLine_CenterSensorOnLine_inner_region_CenterSensorOnLine_tr1() {
+		exitSequence_main_PuzzleSolver_LineFollower_LineFollowerOn_s_Composite_RightSensorOnLine_LeftSensorOnLine_CenterSensorOnLine_inner_region_CenterSensorOnLine();
+		enterSequence_main_PuzzleSolver_LineFollower_LineFollowerOn_s_Composite_RightSensorOnLine_LeftSensorOnLine_CenterSensorOnLine_inner_region_RightSensorOnLine_default();
+	}
+	
+	private void effect_main_PuzzleSolver_LineFollower_LineFollowerOff_tr0() {
+		exitSequence_main_PuzzleSolver_LineFollower_LineFollowerOff();
+		enterSequence_main_PuzzleSolver_LineFollower_LineFollowerOn_default();
+	}
+	
+	private void effect_main_PuzzleSolver_Orientation_East_tr0() {
+		exitSequence_main_PuzzleSolver_Orientation_East();
+		setTurn("right");
+		
+		raiseStartTurning();
+		
+		enterSequence_main_PuzzleSolver_Orientation_South_default();
+	}
+	
+	private void effect_main_PuzzleSolver_Orientation_East_tr1() {
+		exitSequence_main_PuzzleSolver_Orientation_East();
+		setTurn("left");
+		
+		raiseStartTurning();
+		
+		enterSequence_main_PuzzleSolver_Orientation_North_default();
+	}
+	
+	private void effect_main_PuzzleSolver_Orientation_East_tr2() {
+		exitSequence_main_PuzzleSolver_Orientation_East();
+		setTurn("back");
+		
+		raiseStartTurning();
+		
+		enterSequence_main_PuzzleSolver_Orientation_West_default();
+	}
+	
+	private void effect_main_PuzzleSolver_Orientation_East_tr3() {
+		exitSequence_main_PuzzleSolver_Orientation_East();
+		setTurn("forward");
+		
+		raiseStartTurning();
+		
+		enterSequence_main_PuzzleSolver_Orientation_East_default();
+	}
+	
+	private void effect_main_PuzzleSolver_Orientation_West_tr0() {
+		exitSequence_main_PuzzleSolver_Orientation_West();
+		setTurn("right");
+		
+		raiseStartTurning();
+		
+		enterSequence_main_PuzzleSolver_Orientation_North_default();
+	}
+	
+	private void effect_main_PuzzleSolver_Orientation_West_tr1() {
+		exitSequence_main_PuzzleSolver_Orientation_West();
+		setTurn("left");
+		
+		raiseStartTurning();
+		
+		enterSequence_main_PuzzleSolver_Orientation_South_default();
+	}
+	
+	private void effect_main_PuzzleSolver_Orientation_West_tr2() {
+		exitSequence_main_PuzzleSolver_Orientation_West();
+		setTurn("back");
+		
+		raiseStartTurning();
+		
+		enterSequence_main_PuzzleSolver_Orientation_East_default();
+	}
+	
+	private void effect_main_PuzzleSolver_Orientation_West_tr3() {
+		exitSequence_main_PuzzleSolver_Orientation_West();
+		setTurn("forward");
+		
+		raiseStartTurning();
+		
+		enterSequence_main_PuzzleSolver_Orientation_West_default();
+	}
+	
+	private void effect_main_PuzzleSolver_Orientation_North_tr0() {
+		exitSequence_main_PuzzleSolver_Orientation_North();
+		setTurn("right");
+		
+		raiseStartTurning();
+		
+		enterSequence_main_PuzzleSolver_Orientation_East_default();
+	}
+	
+	private void effect_main_PuzzleSolver_Orientation_North_tr1() {
+		exitSequence_main_PuzzleSolver_Orientation_North();
+		setTurn("left");
+		
+		raiseStartTurning();
+		
+		enterSequence_main_PuzzleSolver_Orientation_West_default();
+	}
+	
+	private void effect_main_PuzzleSolver_Orientation_North_tr2() {
+		exitSequence_main_PuzzleSolver_Orientation_North();
+		setTurn("back");
+		
+		raiseStartTurning();
+		
+		enterSequence_main_PuzzleSolver_Orientation_South_default();
+	}
+	
+	private void effect_main_PuzzleSolver_Orientation_North_tr3() {
+		exitSequence_main_PuzzleSolver_Orientation_North();
+		setTurn("forward");
+		
+		raiseStartTurning();
+		
+		enterSequence_main_PuzzleSolver_Orientation_North_default();
+	}
+	
+	private void effect_main_PuzzleSolver_Orientation_South_tr0() {
+		exitSequence_main_PuzzleSolver_Orientation_South();
+		setTurn("right");
+		
+		raiseStartTurning();
+		
+		enterSequence_main_PuzzleSolver_Orientation_West_default();
+	}
+	
+	private void effect_main_PuzzleSolver_Orientation_South_tr1() {
+		exitSequence_main_PuzzleSolver_Orientation_South();
+		setTurn("left");
+		
+		raiseStartTurning();
+		
+		enterSequence_main_PuzzleSolver_Orientation_East_default();
+	}
+	
+	private void effect_main_PuzzleSolver_Orientation_South_tr2() {
+		exitSequence_main_PuzzleSolver_Orientation_South();
+		setTurn("back");
+		
+		raiseStartTurning();
+		
+		enterSequence_main_PuzzleSolver_Orientation_North_default();
+	}
+	
+	private void effect_main_PuzzleSolver_Orientation_South_tr3() {
+		exitSequence_main_PuzzleSolver_Orientation_South();
+		setTurn("forward");
+		
+		raiseStartTurning();
+		
+		enterSequence_main_PuzzleSolver_Orientation_South_default();
+	}
+	
+	private void effect_main_PuzzleSolver_Turn_TurningOn_tr0() {
+		exitSequence_main_PuzzleSolver_Turn_TurningOn();
+		enterSequence_main_PuzzleSolver_Turn_TurningOff_default();
+	}
+	
+	private void effect_main_PuzzleSolver_Turn_TurningOn_ss_GoingForward_tr0() {
+		exitSequence_main_PuzzleSolver_Turn_TurningOn_ss_GoingForward();
+		react_main_PuzzleSolver_Turn_TurningOn_ss__exit_Default();
+	}
+	
+	private void effect_main_PuzzleSolver_Turn_TurningOn_ss_TurningLeft_tr0() {
+		exitSequence_main_PuzzleSolver_Turn_TurningOn_ss_TurningLeft();
+		sCIInput.operationCallback.break_ID(50);
+		
+		react_main_PuzzleSolver_Turn_TurningOn_ss__exit_Default();
+	}
+	
+	private void effect_main_PuzzleSolver_Turn_TurningOn_ss_TurningRight_tr0() {
+		exitSequence_main_PuzzleSolver_Turn_TurningOn_ss_TurningRight();
+		sCIInput.operationCallback.break_ID(80);
+		
+		react_main_PuzzleSolver_Turn_TurningOn_ss__exit_Default();
+	}
+	
+	private void effect_main_PuzzleSolver_Turn_TurningOn_ss_TurningBack_tr0() {
+		exitSequence_main_PuzzleSolver_Turn_TurningOn_ss_TurningBack();
+		sCIInput.operationCallback.break_ID(80);
+		
+		react_main_PuzzleSolver_Turn_TurningOn_ss__exit_Default();
+	}
+	
+	private void effect_main_PuzzleSolver_Turn_TurningOff_tr0() {
+		exitSequence_main_PuzzleSolver_Turn_TurningOff();
+		enterSequence_main_PuzzleSolver_Turn_TurningOn_default();
+	}
+	
+	private void effect_main_PuzzleSolver_main__choice_0_tr1() {
+		react_main_PuzzleSolver_main__exit_Default();
+	}
+	
+	private void effect_main_PuzzleSolver_main__choice_0_tr0() {
+		enterSequence_main_PuzzleSolver_main_going_in_middle_of_d2_default();
+	}
+	
+	private void effect_main_PuzzleSolver_GotoTargetNode_NodeAction_ToNextNode__choice_0_tr0() {
+		raiseOrientInSouth();
+		
+		enterSequence_main_PuzzleSolver_GotoTargetNode_NodeAction_ToNextNode_NodeActionInProgress_default();
+	}
+	
+	private void effect_main_PuzzleSolver_GotoTargetNode_NodeAction_ToNextNode__choice_0_tr1() {
+		raiseOrientInNorth();
+		
+		enterSequence_main_PuzzleSolver_GotoTargetNode_NodeAction_ToNextNode_NodeActionInProgress_default();
+	}
+	
+	private void effect_main_PuzzleSolver_GotoTargetNode_NodeAction_ToNextNode__choice_0_tr2() {
+		react_main_PuzzleSolver_GotoTargetNode_NodeAction_ToNextNode__choice_1();
+	}
+	
+	private void effect_main_PuzzleSolver_GotoTargetNode_NodeAction_ToNextNode__choice_1_tr0() {
+		raiseOrientInEast();
+		
+		enterSequence_main_PuzzleSolver_GotoTargetNode_NodeAction_ToNextNode_NodeActionInProgress_default();
+	}
+	
+	private void effect_main_PuzzleSolver_GotoTargetNode_NodeAction_ToNextNode__choice_1_tr1() {
+		raiseOrientInWest();
+		
+		enterSequence_main_PuzzleSolver_GotoTargetNode_NodeAction_ToNextNode_NodeActionInProgress_default();
+	}
+	
+	private void effect_main_PuzzleSolver_GotoTargetNode_NodeAction_ToNextNode__choice_1_tr3() {
+		sCIInput.operationCallback.break_ID(20);
+		
+		react_main_PuzzleSolver_GotoTargetNode_NodeAction_ToNextNode_AtTargetNode();
+	}
+	
+	private void effect_main_PuzzleSolver_GotoTargetNode_NodeAction_ToNextNode__choice_1_tr2() {
+		exitSequence_main_PuzzleSolver_GotoTargetNode_NodeAction();
+		enterSequence_main_PuzzleSolver_GotoTargetNode_NodeAction_default();
+	}
+	
+	private void effect_main_PuzzleSolver_Coordinates__choice_0_tr0() {
+		setY(getY() + 1);
+		
+		enterSequence_main_PuzzleSolver_Coordinates_Coordinates_default();
+	}
+	
+	private void effect_main_PuzzleSolver_Coordinates__choice_0_tr1() {
+		setY(getY() - 1);
+		
+		enterSequence_main_PuzzleSolver_Coordinates_Coordinates_default();
+	}
+	
+	private void effect_main_PuzzleSolver_Coordinates__choice_0_tr2() {
+		setX(getX() - 1);
+		
+		enterSequence_main_PuzzleSolver_Coordinates_Coordinates_default();
+	}
+	
+	private void effect_main_PuzzleSolver_Coordinates__choice_0_tr3() {
+		setX(getX() + 1);
+		
+		enterSequence_main_PuzzleSolver_Coordinates_Coordinates_default();
+	}
+	
+	private void effect_main_PuzzleSolver_Coordinates__choice_0_tr4() {
+		enterSequence_main_PuzzleSolver_Coordinates_Coordinates_default();
+	}
+	
+	private void effect_main_PuzzleSolver_Turn_TurningOn_ss__choice_0_tr0() {
+		enterSequence_main_PuzzleSolver_Turn_TurningOn_ss_GoingForward_default();
+	}
+	
+	private void effect_main_PuzzleSolver_Turn_TurningOn_ss__choice_0_tr1() {
+		enterSequence_main_PuzzleSolver_Turn_TurningOn_ss_TurningLeft_default();
+	}
+	
+	private void effect_main_PuzzleSolver_Turn_TurningOn_ss__choice_0_tr2() {
+		enterSequence_main_PuzzleSolver_Turn_TurningOn_ss_TurningRight_default();
+	}
+	
+	private void effect_main_PuzzleSolver_Turn_TurningOn_ss__choice_0_tr3() {
+		enterSequence_main_PuzzleSolver_Turn_TurningOn_ss_TurningBack_default();
+	}
+	
+	private void effect_main_PuzzleSolver_Turn_TurningOn_ss__choice_0_tr4() {
+		react_main_PuzzleSolver_Turn_TurningOn_ss__exit_Default();
+	}
+	
+	/* Entry action for state 'start'. */
+	private void entryAction_main_PuzzleSolver_main_start() {
+		raiseStartLineFollower();
+	}
+	
+	/* Entry action for state 'going to middle of segment'. */
+	private void entryAction_main_PuzzleSolver_main_picking_picking_going_to_middle_of_segment() {
+		raiseStartLineFollower();
+		
+		sCIInput.operationCallback.reset_count();
+		
+		sCIInput.setDistance(0);
+	}
+	
+	/* Entry action for state 'at middle of segment'. */
+	private void entryAction_main_PuzzleSolver_main_picking_picking_at_middle_of_segment() {
+		sCIInput.operationCallback.lcd_print(2, 5, sCIInput.getNum(), 1);
+		
+		sCIInput.operationCallback.delayms(200);
+		
+		sCIInput.operationCallback.buzzer_off();
+	}
+	
+	/* Entry action for state 'going in middle of d1'. */
+	private void entryAction_main_PuzzleSolver_main_going_in_middle_of_d1() {
+		setTy(2);
+		
+		raiseGotoxy();
+	}
+	
+	/* Entry action for state 'going to drop node'. */
+	private void entryAction_main_PuzzleSolver_main_going_to_drop_node() {
+		raiseGotoxy();
+	}
+	
+	/* Entry action for state 'going to middle of segment'. */
+	private void entryAction_main_PuzzleSolver_main_dropping_dropping_going_to_middle_of_segment() {
+		raiseStartLineFollower();
+		
+		sCIInput.operationCallback.reset_count();
+		
+		sCIInput.setDistance(0);
+	}
+	
+	/* Entry action for state 'at middle of segment'. */
+	private void entryAction_main_PuzzleSolver_main_dropping_dropping_at_middle_of_segment() {
+		sCIInput.operationCallback.lcd_print(2, 5, 0, 1);
+		
+		sCIInput.operationCallback.delayms(200);
+		
+		sCIInput.operationCallback.buzzer_off();
+	}
+	
+	/* Entry action for state 'going in middle of d2'. */
+	private void entryAction_main_PuzzleSolver_main_going_in_middle_of_d2() {
+		setTy(2);
+		
+		raiseGotoxy();
+	}
+	
+	/* Entry action for state 'GoingToNextNode'. */
+	private void entryAction_main_PuzzleSolver_GotoTargetNode_GoingToNextNode() {
+		raiseStartLineFollower();
+	}
+	
+	/* Entry action for state 'AllSensorDetectWhite'. */
+	private void entryAction_main_PuzzleSolver_LineFollower_LineFollowerOn_s_AllSensorDetectWhite() {
+		sCIInput.operationCallback.forward();
+		
+		sCIInput.operationCallback.velocity(180, 180);
+	}
+	
+	/* Entry action for state 'RightSensorOnLine'. */
+	private void entryAction_main_PuzzleSolver_LineFollower_LineFollowerOn_s_Composite_RightSensorOnLine_LeftSensorOnLine_CenterSensorOnLine_inner_region_RightSensorOnLine() {
+		sCIInput.operationCallback.soft_right();
+		
+		sCIInput.operationCallback.velocity(150, 150);
+	}
+	
+	/* Entry action for state 'LeftSensorOnLine'. */
+	private void entryAction_main_PuzzleSolver_LineFollower_LineFollowerOn_s_Composite_RightSensorOnLine_LeftSensorOnLine_CenterSensorOnLine_inner_region_LeftSensorOnLine() {
+		sCIInput.operationCallback.soft_left();
+		
+		sCIInput.operationCallback.velocity(100, 100);
+	}
+	
+	/* Entry action for state 'CenterSensorOnLine'. */
+	private void entryAction_main_PuzzleSolver_LineFollower_LineFollowerOn_s_Composite_RightSensorOnLine_LeftSensorOnLine_CenterSensorOnLine_inner_region_CenterSensorOnLine() {
+		sCIInput.operationCallback.soft_right();
+		
+		sCIInput.operationCallback.velocity(130, 130);
+	}
+	
+	/* Entry action for state 'GoingForward'. */
+	private void entryAction_main_PuzzleSolver_Turn_TurningOn_ss_GoingForward() {
+		sCIInput.operationCallback.forward();
+	}
+	
+	/* Entry action for state 'TurningLeft'. */
+	private void entryAction_main_PuzzleSolver_Turn_TurningOn_ss_TurningLeft() {
+		sCIInput.operationCallback.forward_mm(70);
+		
+		sCIInput.operationCallback.break_ID(255);
+		
+		sCIInput.operationCallback.velocity(130, 130);
+		
+		sCIInput.operationCallback.left_degrees(55);
+		
+		sCIInput.setLeft_sensed_line(false);
+		
+		sCIInput.operationCallback.left();
+	}
+	
+	/* Entry action for state 'TurningRight'. */
+	private void entryAction_main_PuzzleSolver_Turn_TurningOn_ss_TurningRight() {
+		sCIInput.operationCallback.forward_mm(55);
+		
+		sCIInput.operationCallback.break_ID(255);
+		
+		sCIInput.operationCallback.velocity(130, 130);
+		
+		sCIInput.operationCallback.right_degrees(55);
+		
+		sCIInput.setCenter_sensed_line(false);
+		
+		sCIInput.operationCallback.right();
+	}
+	
+	/* Entry action for state 'TurningBack'. */
+	private void entryAction_main_PuzzleSolver_Turn_TurningOn_ss_TurningBack() {
+		sCIInput.operationCallback.forward_mm(40);
+		
+		sCIInput.operationCallback.break_ID(255);
+		
+		sCIInput.operationCallback.velocity(100, 130);
+		
+		sCIInput.operationCallback.right_degrees(120);
+		
+		sCIInput.setCenter_sensed_line(false);
+		
+		sCIInput.operationCallback.right();
+	}
+	
+	/* Entry action for state 'stop'. */
+	private void entryAction_main_stop() {
+		sCIInput.operationCallback.velocity(0, 0);
+		
+		sCIInput.operationCallback.buzzer_on();
+		
+		sCIInput.operationCallback.delayms(2000);
+		
+		sCIInput.operationCallback.buzzer_off();
+	}
+	
+	/* 'default' enter sequence for state PuzzleSolver */
+	private void enterSequence_main_PuzzleSolver_default() {
+		enterSequence_main_PuzzleSolver_main_default();
+		enterSequence_main_PuzzleSolver_GotoTargetNode_default();
+		enterSequence_main_PuzzleSolver_Coordinates_default();
+		enterSequence_main_PuzzleSolver_LineFollower_default();
+		enterSequence_main_PuzzleSolver_Orientation_default();
+		enterSequence_main_PuzzleSolver_Turn_default();
+	}
+	
+	/* 'default' enter sequence for state start */
+	private void enterSequence_main_PuzzleSolver_main_start_default() {
+		entryAction_main_PuzzleSolver_main_start();
+		nextStateIndex = 0;
+		stateVector[0] = State.main_PuzzleSolver_main_start;
+	}
+	
+	/* 'default' enter sequence for state go to pick node */
+	private void enterSequence_main_PuzzleSolver_main_go_to_pick_node_default() {
+		nextStateIndex = 0;
+		stateVector[0] = State.main_PuzzleSolver_main_go_to_pick_node;
+	}
+	
+	/* 'default' enter sequence for state picking */
+	private void enterSequence_main_PuzzleSolver_main_picking_default() {
+		enterSequence_main_PuzzleSolver_main_picking_picking_default();
+	}
+	
+	/* 'default' enter sequence for state going to middle of segment */
+	private void enterSequence_main_PuzzleSolver_main_picking_picking_going_to_middle_of_segment_default() {
+		entryAction_main_PuzzleSolver_main_picking_picking_going_to_middle_of_segment();
+		nextStateIndex = 0;
+		stateVector[0] = State.main_PuzzleSolver_main_picking_picking_going_to_middle_of_segment;
+	}
+	
+	/* 'default' enter sequence for state at middle of segment */
+	private void enterSequence_main_PuzzleSolver_main_picking_picking_at_middle_of_segment_default() {
+		entryAction_main_PuzzleSolver_main_picking_picking_at_middle_of_segment();
+		nextStateIndex = 0;
+		stateVector[0] = State.main_PuzzleSolver_main_picking_picking_at_middle_of_segment;
+	}
+	
+	/* 'default' enter sequence for state going in middle of d1 */
+	private void enterSequence_main_PuzzleSolver_main_going_in_middle_of_d1_default() {
+		entryAction_main_PuzzleSolver_main_going_in_middle_of_d1();
+		nextStateIndex = 0;
+		stateVector[0] = State.main_PuzzleSolver_main_going_in_middle_of_d1;
+	}
+	
+	/* 'default' enter sequence for state going to drop node */
+	private void enterSequence_main_PuzzleSolver_main_going_to_drop_node_default() {
+		entryAction_main_PuzzleSolver_main_going_to_drop_node();
+		nextStateIndex = 0;
+		stateVector[0] = State.main_PuzzleSolver_main_going_to_drop_node;
+	}
+	
+	/* 'default' enter sequence for state dropping */
+	private void enterSequence_main_PuzzleSolver_main_dropping_default() {
+		enterSequence_main_PuzzleSolver_main_dropping_dropping_default();
+	}
+	
+	/* 'default' enter sequence for state going to middle of segment */
+	private void enterSequence_main_PuzzleSolver_main_dropping_dropping_going_to_middle_of_segment_default() {
+		entryAction_main_PuzzleSolver_main_dropping_dropping_going_to_middle_of_segment();
+		nextStateIndex = 0;
+		stateVector[0] = State.main_PuzzleSolver_main_dropping_dropping_going_to_middle_of_segment;
+	}
+	
+	/* 'default' enter sequence for state at middle of segment */
+	private void enterSequence_main_PuzzleSolver_main_dropping_dropping_at_middle_of_segment_default() {
+		entryAction_main_PuzzleSolver_main_dropping_dropping_at_middle_of_segment();
+		nextStateIndex = 0;
+		stateVector[0] = State.main_PuzzleSolver_main_dropping_dropping_at_middle_of_segment;
+	}
+	
+	/* 'default' enter sequence for state going in middle of d2 */
+	private void enterSequence_main_PuzzleSolver_main_going_in_middle_of_d2_default() {
+		entryAction_main_PuzzleSolver_main_going_in_middle_of_d2();
+		nextStateIndex = 0;
+		stateVector[0] = State.main_PuzzleSolver_main_going_in_middle_of_d2;
+	}
+	
+	/* 'default' enter sequence for state GoingToNextNode */
+	private void enterSequence_main_PuzzleSolver_GotoTargetNode_GoingToNextNode_default() {
+		entryAction_main_PuzzleSolver_GotoTargetNode_GoingToNextNode();
+		nextStateIndex = 1;
+		stateVector[1] = State.main_PuzzleSolver_GotoTargetNode_GoingToNextNode;
+	}
+	
+	/* 'default' enter sequence for state NodeAction */
+	private void enterSequence_main_PuzzleSolver_GotoTargetNode_NodeAction_default() {
+		enterSequence_main_PuzzleSolver_GotoTargetNode_NodeAction_ToNextNode_default();
+	}
+	
+	/* 'default' enter sequence for state NodeActionInProgress */
+	private void enterSequence_main_PuzzleSolver_GotoTargetNode_NodeAction_ToNextNode_NodeActionInProgress_default() {
+		nextStateIndex = 1;
+		stateVector[1] = State.main_PuzzleSolver_GotoTargetNode_NodeAction_ToNextNode_NodeActionInProgress;
+	}
+	
+	/* 'default' enter sequence for state StartNodeAction */
+	private void enterSequence_main_PuzzleSolver_GotoTargetNode_NodeAction_ToNextNode_StartNodeAction_default() {
+		nextStateIndex = 1;
+		stateVector[1] = State.main_PuzzleSolver_GotoTargetNode_NodeAction_ToNextNode_StartNodeAction;
+	}
+	
+	/* 'default' enter sequence for state Idle */
+	private void enterSequence_main_PuzzleSolver_GotoTargetNode_Idle_default() {
+		nextStateIndex = 1;
+		stateVector[1] = State.main_PuzzleSolver_GotoTargetNode_Idle;
+	}
+	
+	/* 'default' enter sequence for state Coordinates */
+	private void enterSequence_main_PuzzleSolver_Coordinates_Coordinates_default() {
+		nextStateIndex = 2;
+		stateVector[2] = State.main_PuzzleSolver_Coordinates_Coordinates;
+	}
+	
+	/* 'default' enter sequence for state LineFollowerOn */
+	private void enterSequence_main_PuzzleSolver_LineFollower_LineFollowerOn_default() {
+		enterSequence_main_PuzzleSolver_LineFollower_LineFollowerOn_s_default();
+	}
+	
+	/* 'default' enter sequence for state AllSensorDetectWhite */
+	private void enterSequence_main_PuzzleSolver_LineFollower_LineFollowerOn_s_AllSensorDetectWhite_default() {
+		entryAction_main_PuzzleSolver_LineFollower_LineFollowerOn_s_AllSensorDetectWhite();
+		nextStateIndex = 3;
+		stateVector[3] = State.main_PuzzleSolver_LineFollower_LineFollowerOn_s_AllSensorDetectWhite;
+	}
+	
+	/* 'default' enter sequence for state RightSensorOnLine */
+	private void enterSequence_main_PuzzleSolver_LineFollower_LineFollowerOn_s_Composite_RightSensorOnLine_LeftSensorOnLine_CenterSensorOnLine_inner_region_RightSensorOnLine_default() {
+		entryAction_main_PuzzleSolver_LineFollower_LineFollowerOn_s_Composite_RightSensorOnLine_LeftSensorOnLine_CenterSensorOnLine_inner_region_RightSensorOnLine();
+		nextStateIndex = 3;
+		stateVector[3] = State.main_PuzzleSolver_LineFollower_LineFollowerOn_s_Composite_RightSensorOnLine_LeftSensorOnLine_CenterSensorOnLine_inner_region_RightSensorOnLine;
+	}
+	
+	/* 'default' enter sequence for state LeftSensorOnLine */
+	private void enterSequence_main_PuzzleSolver_LineFollower_LineFollowerOn_s_Composite_RightSensorOnLine_LeftSensorOnLine_CenterSensorOnLine_inner_region_LeftSensorOnLine_default() {
+		entryAction_main_PuzzleSolver_LineFollower_LineFollowerOn_s_Composite_RightSensorOnLine_LeftSensorOnLine_CenterSensorOnLine_inner_region_LeftSensorOnLine();
+		nextStateIndex = 3;
+		stateVector[3] = State.main_PuzzleSolver_LineFollower_LineFollowerOn_s_Composite_RightSensorOnLine_LeftSensorOnLine_CenterSensorOnLine_inner_region_LeftSensorOnLine;
+	}
+	
+	/* 'default' enter sequence for state CenterSensorOnLine */
+	private void enterSequence_main_PuzzleSolver_LineFollower_LineFollowerOn_s_Composite_RightSensorOnLine_LeftSensorOnLine_CenterSensorOnLine_inner_region_CenterSensorOnLine_default() {
+		entryAction_main_PuzzleSolver_LineFollower_LineFollowerOn_s_Composite_RightSensorOnLine_LeftSensorOnLine_CenterSensorOnLine_inner_region_CenterSensorOnLine();
+		nextStateIndex = 3;
+		stateVector[3] = State.main_PuzzleSolver_LineFollower_LineFollowerOn_s_Composite_RightSensorOnLine_LeftSensorOnLine_CenterSensorOnLine_inner_region_CenterSensorOnLine;
+	}
+	
+	/* 'default' enter sequence for state LineFollowerOff */
+	private void enterSequence_main_PuzzleSolver_LineFollower_LineFollowerOff_default() {
+		nextStateIndex = 3;
+		stateVector[3] = State.main_PuzzleSolver_LineFollower_LineFollowerOff;
+	}
+	
+	/* 'default' enter sequence for state East */
+	private void enterSequence_main_PuzzleSolver_Orientation_East_default() {
+		nextStateIndex = 4;
+		stateVector[4] = State.main_PuzzleSolver_Orientation_East;
+	}
+	
+	/* 'default' enter sequence for state West */
+	private void enterSequence_main_PuzzleSolver_Orientation_West_default() {
+		nextStateIndex = 4;
+		stateVector[4] = State.main_PuzzleSolver_Orientation_West;
+	}
+	
+	/* 'default' enter sequence for state North */
+	private void enterSequence_main_PuzzleSolver_Orientation_North_default() {
+		nextStateIndex = 4;
+		stateVector[4] = State.main_PuzzleSolver_Orientation_North;
+	}
+	
+	/* 'default' enter sequence for state South */
+	private void enterSequence_main_PuzzleSolver_Orientation_South_default() {
+		nextStateIndex = 4;
+		stateVector[4] = State.main_PuzzleSolver_Orientation_South;
+	}
+	
+	/* 'default' enter sequence for state TurningOn */
+	private void enterSequence_main_PuzzleSolver_Turn_TurningOn_default() {
+		enterSequence_main_PuzzleSolver_Turn_TurningOn_ss_default();
+	}
+	
+	/* 'default' enter sequence for state GoingForward */
+	private void enterSequence_main_PuzzleSolver_Turn_TurningOn_ss_GoingForward_default() {
+		entryAction_main_PuzzleSolver_Turn_TurningOn_ss_GoingForward();
+		nextStateIndex = 5;
+		stateVector[5] = State.main_PuzzleSolver_Turn_TurningOn_ss_GoingForward;
+	}
+	
+	/* 'default' enter sequence for state TurningLeft */
+	private void enterSequence_main_PuzzleSolver_Turn_TurningOn_ss_TurningLeft_default() {
+		entryAction_main_PuzzleSolver_Turn_TurningOn_ss_TurningLeft();
+		nextStateIndex = 5;
+		stateVector[5] = State.main_PuzzleSolver_Turn_TurningOn_ss_TurningLeft;
+	}
+	
+	/* 'default' enter sequence for state TurningRight */
+	private void enterSequence_main_PuzzleSolver_Turn_TurningOn_ss_TurningRight_default() {
+		entryAction_main_PuzzleSolver_Turn_TurningOn_ss_TurningRight();
+		nextStateIndex = 5;
+		stateVector[5] = State.main_PuzzleSolver_Turn_TurningOn_ss_TurningRight;
+	}
+	
+	/* 'default' enter sequence for state TurningBack */
+	private void enterSequence_main_PuzzleSolver_Turn_TurningOn_ss_TurningBack_default() {
+		entryAction_main_PuzzleSolver_Turn_TurningOn_ss_TurningBack();
+		nextStateIndex = 5;
+		stateVector[5] = State.main_PuzzleSolver_Turn_TurningOn_ss_TurningBack;
+	}
+	
+	/* 'default' enter sequence for state TurningOff */
+	private void enterSequence_main_PuzzleSolver_Turn_TurningOff_default() {
+		nextStateIndex = 5;
+		stateVector[5] = State.main_PuzzleSolver_Turn_TurningOff;
+	}
+	
+	/* 'default' enter sequence for state stop */
+	private void enterSequence_main_stop_default() {
+		entryAction_main_stop();
+		nextStateIndex = 0;
+		stateVector[0] = State.main_stop;
+	}
+	
+	/* 'default' enter sequence for region main */
+	private void enterSequence_main_default() {
+		react_main__entry_Default();
+	}
+	
+	/* 'default' enter sequence for region main */
+	private void enterSequence_main_PuzzleSolver_main_default() {
+		react_main_PuzzleSolver_main__entry_Default();
+	}
+	
+	/* 'default' enter sequence for region picking */
+	private void enterSequence_main_PuzzleSolver_main_picking_picking_default() {
+		react_main_PuzzleSolver_main_picking_picking__entry_Default();
+	}
+	
+	/* 'default' enter sequence for region dropping */
+	private void enterSequence_main_PuzzleSolver_main_dropping_dropping_default() {
+		react_main_PuzzleSolver_main_dropping_dropping__entry_Default();
+	}
+	
+	/* 'default' enter sequence for region GotoTargetNode */
+	private void enterSequence_main_PuzzleSolver_GotoTargetNode_default() {
+		react_main_PuzzleSolver_GotoTargetNode__entry_Default();
+	}
+	
+	/* 'default' enter sequence for region ToNextNode */
+	private void enterSequence_main_PuzzleSolver_GotoTargetNode_NodeAction_ToNextNode_default() {
+		react_main_PuzzleSolver_GotoTargetNode_NodeAction_ToNextNode__entry_Default();
+	}
+	
+	/* 'default' enter sequence for region Coordinates */
+	private void enterSequence_main_PuzzleSolver_Coordinates_default() {
+		react_main_PuzzleSolver_Coordinates__entry_Default();
+	}
+	
+	/* 'default' enter sequence for region LineFollower */
+	private void enterSequence_main_PuzzleSolver_LineFollower_default() {
+		react_main_PuzzleSolver_LineFollower__entry_Default();
+	}
+	
+	/* 'default' enter sequence for region s */
+	private void enterSequence_main_PuzzleSolver_LineFollower_LineFollowerOn_s_default() {
+		react_main_PuzzleSolver_LineFollower_LineFollowerOn_s__entry_Default();
+	}
+	
+	/* 'default' enter sequence for region Orientation */
+	private void enterSequence_main_PuzzleSolver_Orientation_default() {
+		react_main_PuzzleSolver_Orientation__entry_Default();
+	}
+	
+	/* 'default' enter sequence for region Turn */
+	private void enterSequence_main_PuzzleSolver_Turn_default() {
+		react_main_PuzzleSolver_Turn__entry_Default();
+	}
+	
+	/* 'default' enter sequence for region ss */
+	private void enterSequence_main_PuzzleSolver_Turn_TurningOn_ss_default() {
+		react_main_PuzzleSolver_Turn_TurningOn_ss__entry_Default();
+	}
+	
+	/* Default exit sequence for state PuzzleSolver */
+	private void exitSequence_main_PuzzleSolver() {
+		exitSequence_main_PuzzleSolver_main();
+		exitSequence_main_PuzzleSolver_GotoTargetNode();
+		exitSequence_main_PuzzleSolver_Coordinates();
+		exitSequence_main_PuzzleSolver_LineFollower();
+		exitSequence_main_PuzzleSolver_Orientation();
+		exitSequence_main_PuzzleSolver_Turn();
+	}
+	
+	/* Default exit sequence for state start */
+	private void exitSequence_main_PuzzleSolver_main_start() {
+		nextStateIndex = 0;
+		stateVector[0] = State.$NullState$;
+	}
+	
+	/* Default exit sequence for state go to pick node */
+	private void exitSequence_main_PuzzleSolver_main_go_to_pick_node() {
+		nextStateIndex = 0;
+		stateVector[0] = State.$NullState$;
+	}
+	
+	/* Default exit sequence for state picking */
+	private void exitSequence_main_PuzzleSolver_main_picking() {
+		exitSequence_main_PuzzleSolver_main_picking_picking();
+	}
+	
+	/* Default exit sequence for state going to middle of segment */
+	private void exitSequence_main_PuzzleSolver_main_picking_picking_going_to_middle_of_segment() {
+		nextStateIndex = 0;
+		stateVector[0] = State.$NullState$;
+	}
+	
+	/* Default exit sequence for state at middle of segment */
+	private void exitSequence_main_PuzzleSolver_main_picking_picking_at_middle_of_segment() {
+		nextStateIndex = 0;
+		stateVector[0] = State.$NullState$;
+	}
+	
+	/* Default exit sequence for state going in middle of d1 */
+	private void exitSequence_main_PuzzleSolver_main_going_in_middle_of_d1() {
+		nextStateIndex = 0;
+		stateVector[0] = State.$NullState$;
+	}
+	
+	/* Default exit sequence for state going to drop node */
+	private void exitSequence_main_PuzzleSolver_main_going_to_drop_node() {
+		nextStateIndex = 0;
+		stateVector[0] = State.$NullState$;
+	}
+	
+	/* Default exit sequence for state dropping */
+	private void exitSequence_main_PuzzleSolver_main_dropping() {
+		exitSequence_main_PuzzleSolver_main_dropping_dropping();
+	}
+	
+	/* Default exit sequence for state going to middle of segment */
+	private void exitSequence_main_PuzzleSolver_main_dropping_dropping_going_to_middle_of_segment() {
+		nextStateIndex = 0;
+		stateVector[0] = State.$NullState$;
+	}
+	
+	/* Default exit sequence for state at middle of segment */
+	private void exitSequence_main_PuzzleSolver_main_dropping_dropping_at_middle_of_segment() {
+		nextStateIndex = 0;
+		stateVector[0] = State.$NullState$;
+	}
+	
+	/* Default exit sequence for state going in middle of d2 */
+	private void exitSequence_main_PuzzleSolver_main_going_in_middle_of_d2() {
+		nextStateIndex = 0;
+		stateVector[0] = State.$NullState$;
+	}
+	
+	/* Default exit sequence for state GoingToNextNode */
+	private void exitSequence_main_PuzzleSolver_GotoTargetNode_GoingToNextNode() {
+		nextStateIndex = 1;
+		stateVector[1] = State.$NullState$;
+	}
+	
+	/* Default exit sequence for state NodeAction */
+	private void exitSequence_main_PuzzleSolver_GotoTargetNode_NodeAction() {
+		exitSequence_main_PuzzleSolver_GotoTargetNode_NodeAction_ToNextNode();
+	}
+	
+	/* Default exit sequence for state NodeActionInProgress */
+	private void exitSequence_main_PuzzleSolver_GotoTargetNode_NodeAction_ToNextNode_NodeActionInProgress() {
+		nextStateIndex = 1;
+		stateVector[1] = State.$NullState$;
+	}
+	
+	/* Default exit sequence for state StartNodeAction */
+	private void exitSequence_main_PuzzleSolver_GotoTargetNode_NodeAction_ToNextNode_StartNodeAction() {
+		nextStateIndex = 1;
+		stateVector[1] = State.$NullState$;
+	}
+	
+	/* Default exit sequence for state Idle */
+	private void exitSequence_main_PuzzleSolver_GotoTargetNode_Idle() {
+		nextStateIndex = 1;
+		stateVector[1] = State.$NullState$;
+	}
+	
+	/* Default exit sequence for state Coordinates */
+	private void exitSequence_main_PuzzleSolver_Coordinates_Coordinates() {
+		nextStateIndex = 2;
+		stateVector[2] = State.$NullState$;
+	}
+	
+	/* Default exit sequence for state LineFollowerOn */
+	private void exitSequence_main_PuzzleSolver_LineFollower_LineFollowerOn() {
+		exitSequence_main_PuzzleSolver_LineFollower_LineFollowerOn_s();
+	}
+	
+	/* Default exit sequence for state AllSensorDetectWhite */
+	private void exitSequence_main_PuzzleSolver_LineFollower_LineFollowerOn_s_AllSensorDetectWhite() {
+		nextStateIndex = 3;
+		stateVector[3] = State.$NullState$;
+	}
+	
+	/* Default exit sequence for state Composite_RightSensorOnLine_LeftSensorOnLine_CenterSensorOnLine */
+	private void exitSequence_main_PuzzleSolver_LineFollower_LineFollowerOn_s_Composite_RightSensorOnLine_LeftSensorOnLine_CenterSensorOnLine() {
+		exitSequence_main_PuzzleSolver_LineFollower_LineFollowerOn_s_Composite_RightSensorOnLine_LeftSensorOnLine_CenterSensorOnLine_inner_region();
+	}
+	
+	/* Default exit sequence for state RightSensorOnLine */
+	private void exitSequence_main_PuzzleSolver_LineFollower_LineFollowerOn_s_Composite_RightSensorOnLine_LeftSensorOnLine_CenterSensorOnLine_inner_region_RightSensorOnLine() {
+		nextStateIndex = 3;
+		stateVector[3] = State.$NullState$;
+	}
+	
+	/* Default exit sequence for state LeftSensorOnLine */
+	private void exitSequence_main_PuzzleSolver_LineFollower_LineFollowerOn_s_Composite_RightSensorOnLine_LeftSensorOnLine_CenterSensorOnLine_inner_region_LeftSensorOnLine() {
+		nextStateIndex = 3;
+		stateVector[3] = State.$NullState$;
+	}
+	
+	/* Default exit sequence for state CenterSensorOnLine */
+	private void exitSequence_main_PuzzleSolver_LineFollower_LineFollowerOn_s_Composite_RightSensorOnLine_LeftSensorOnLine_CenterSensorOnLine_inner_region_CenterSensorOnLine() {
+		nextStateIndex = 3;
+		stateVector[3] = State.$NullState$;
+	}
+	
+	/* Default exit sequence for state LineFollowerOff */
+	private void exitSequence_main_PuzzleSolver_LineFollower_LineFollowerOff() {
+		nextStateIndex = 3;
+		stateVector[3] = State.$NullState$;
+	}
+	
+	/* Default exit sequence for state East */
+	private void exitSequence_main_PuzzleSolver_Orientation_East() {
+		nextStateIndex = 4;
+		stateVector[4] = State.$NullState$;
+	}
+	
+	/* Default exit sequence for state West */
+	private void exitSequence_main_PuzzleSolver_Orientation_West() {
+		nextStateIndex = 4;
+		stateVector[4] = State.$NullState$;
+	}
+	
+	/* Default exit sequence for state North */
+	private void exitSequence_main_PuzzleSolver_Orientation_North() {
+		nextStateIndex = 4;
+		stateVector[4] = State.$NullState$;
+	}
+	
+	/* Default exit sequence for state South */
+	private void exitSequence_main_PuzzleSolver_Orientation_South() {
+		nextStateIndex = 4;
+		stateVector[4] = State.$NullState$;
+	}
+	
+	/* Default exit sequence for state TurningOn */
+	private void exitSequence_main_PuzzleSolver_Turn_TurningOn() {
+		exitSequence_main_PuzzleSolver_Turn_TurningOn_ss();
+	}
+	
+	/* Default exit sequence for state GoingForward */
+	private void exitSequence_main_PuzzleSolver_Turn_TurningOn_ss_GoingForward() {
+		nextStateIndex = 5;
+		stateVector[5] = State.$NullState$;
+	}
+	
+	/* Default exit sequence for state TurningLeft */
+	private void exitSequence_main_PuzzleSolver_Turn_TurningOn_ss_TurningLeft() {
+		nextStateIndex = 5;
+		stateVector[5] = State.$NullState$;
+	}
+	
+	/* Default exit sequence for state TurningRight */
+	private void exitSequence_main_PuzzleSolver_Turn_TurningOn_ss_TurningRight() {
+		nextStateIndex = 5;
+		stateVector[5] = State.$NullState$;
+	}
+	
+	/* Default exit sequence for state TurningBack */
+	private void exitSequence_main_PuzzleSolver_Turn_TurningOn_ss_TurningBack() {
+		nextStateIndex = 5;
+		stateVector[5] = State.$NullState$;
+	}
+	
+	/* Default exit sequence for state TurningOff */
+	private void exitSequence_main_PuzzleSolver_Turn_TurningOff() {
+		nextStateIndex = 5;
+		stateVector[5] = State.$NullState$;
+	}
+	
+	/* Default exit sequence for state stop */
+	private void exitSequence_main_stop() {
+		nextStateIndex = 0;
+		stateVector[0] = State.$NullState$;
+	}
+	
+	/* Default exit sequence for region main */
+	private void exitSequence_main() {
+		switch (stateVector[0]) {
+		case main_PuzzleSolver_main_start:
+			exitSequence_main_PuzzleSolver_main_start();
+			break;
+		case main_PuzzleSolver_main_go_to_pick_node:
+			exitSequence_main_PuzzleSolver_main_go_to_pick_node();
+			break;
+		case main_PuzzleSolver_main_picking_picking_going_to_middle_of_segment:
+			exitSequence_main_PuzzleSolver_main_picking_picking_going_to_middle_of_segment();
+			break;
+		case main_PuzzleSolver_main_picking_picking_at_middle_of_segment:
+			exitSequence_main_PuzzleSolver_main_picking_picking_at_middle_of_segment();
+			break;
+		case main_PuzzleSolver_main_going_in_middle_of_d1:
+			exitSequence_main_PuzzleSolver_main_going_in_middle_of_d1();
+			break;
+		case main_PuzzleSolver_main_going_to_drop_node:
+			exitSequence_main_PuzzleSolver_main_going_to_drop_node();
+			break;
+		case main_PuzzleSolver_main_dropping_dropping_going_to_middle_of_segment:
+			exitSequence_main_PuzzleSolver_main_dropping_dropping_going_to_middle_of_segment();
+			break;
+		case main_PuzzleSolver_main_dropping_dropping_at_middle_of_segment:
+			exitSequence_main_PuzzleSolver_main_dropping_dropping_at_middle_of_segment();
+			break;
+		case main_PuzzleSolver_main_going_in_middle_of_d2:
+			exitSequence_main_PuzzleSolver_main_going_in_middle_of_d2();
+			break;
+		case main_stop:
+			exitSequence_main_stop();
+			break;
+		default:
+			break;
+		}
+		
+		switch (stateVector[1]) {
+		case main_PuzzleSolver_GotoTargetNode_GoingToNextNode:
+			exitSequence_main_PuzzleSolver_GotoTargetNode_GoingToNextNode();
+			break;
+		case main_PuzzleSolver_GotoTargetNode_NodeAction_ToNextNode_NodeActionInProgress:
+			exitSequence_main_PuzzleSolver_GotoTargetNode_NodeAction_ToNextNode_NodeActionInProgress();
+			break;
+		case main_PuzzleSolver_GotoTargetNode_NodeAction_ToNextNode_StartNodeAction:
+			exitSequence_main_PuzzleSolver_GotoTargetNode_NodeAction_ToNextNode_StartNodeAction();
+			break;
+		case main_PuzzleSolver_GotoTargetNode_Idle:
+			exitSequence_main_PuzzleSolver_GotoTargetNode_Idle();
+			break;
+		default:
+			break;
+		}
+		
+		switch (stateVector[2]) {
+		case main_PuzzleSolver_Coordinates_Coordinates:
+			exitSequence_main_PuzzleSolver_Coordinates_Coordinates();
+			break;
+		default:
+			break;
+		}
+		
+		switch (stateVector[3]) {
+		case main_PuzzleSolver_LineFollower_LineFollowerOn_s_AllSensorDetectWhite:
+			exitSequence_main_PuzzleSolver_LineFollower_LineFollowerOn_s_AllSensorDetectWhite();
+			break;
+		case main_PuzzleSolver_LineFollower_LineFollowerOn_s_Composite_RightSensorOnLine_LeftSensorOnLine_CenterSensorOnLine_inner_region_RightSensorOnLine:
+			exitSequence_main_PuzzleSolver_LineFollower_LineFollowerOn_s_Composite_RightSensorOnLine_LeftSensorOnLine_CenterSensorOnLine_inner_region_RightSensorOnLine();
+			break;
+		case main_PuzzleSolver_LineFollower_LineFollowerOn_s_Composite_RightSensorOnLine_LeftSensorOnLine_CenterSensorOnLine_inner_region_LeftSensorOnLine:
+			exitSequence_main_PuzzleSolver_LineFollower_LineFollowerOn_s_Composite_RightSensorOnLine_LeftSensorOnLine_CenterSensorOnLine_inner_region_LeftSensorOnLine();
+			break;
+		case main_PuzzleSolver_LineFollower_LineFollowerOn_s_Composite_RightSensorOnLine_LeftSensorOnLine_CenterSensorOnLine_inner_region_CenterSensorOnLine:
+			exitSequence_main_PuzzleSolver_LineFollower_LineFollowerOn_s_Composite_RightSensorOnLine_LeftSensorOnLine_CenterSensorOnLine_inner_region_CenterSensorOnLine();
+			break;
+		case main_PuzzleSolver_LineFollower_LineFollowerOff:
+			exitSequence_main_PuzzleSolver_LineFollower_LineFollowerOff();
+			break;
+		default:
+			break;
+		}
+		
+		switch (stateVector[4]) {
+		case main_PuzzleSolver_Orientation_East:
+			exitSequence_main_PuzzleSolver_Orientation_East();
+			break;
+		case main_PuzzleSolver_Orientation_West:
+			exitSequence_main_PuzzleSolver_Orientation_West();
+			break;
+		case main_PuzzleSolver_Orientation_North:
+			exitSequence_main_PuzzleSolver_Orientation_North();
+			break;
+		case main_PuzzleSolver_Orientation_South:
+			exitSequence_main_PuzzleSolver_Orientation_South();
+			break;
+		default:
+			break;
+		}
+		
+		switch (stateVector[5]) {
+		case main_PuzzleSolver_Turn_TurningOn_ss_GoingForward:
+			exitSequence_main_PuzzleSolver_Turn_TurningOn_ss_GoingForward();
+			break;
+		case main_PuzzleSolver_Turn_TurningOn_ss_TurningLeft:
+			exitSequence_main_PuzzleSolver_Turn_TurningOn_ss_TurningLeft();
+			break;
+		case main_PuzzleSolver_Turn_TurningOn_ss_TurningRight:
+			exitSequence_main_PuzzleSolver_Turn_TurningOn_ss_TurningRight();
+			break;
+		case main_PuzzleSolver_Turn_TurningOn_ss_TurningBack:
+			exitSequence_main_PuzzleSolver_Turn_TurningOn_ss_TurningBack();
+			break;
+		case main_PuzzleSolver_Turn_TurningOff:
+			exitSequence_main_PuzzleSolver_Turn_TurningOff();
+			break;
+		default:
+			break;
+		}
+	}
+	
+	/* Default exit sequence for region main */
+	private void exitSequence_main_PuzzleSolver_main() {
+		switch (stateVector[0]) {
+		case main_PuzzleSolver_main_start:
+			exitSequence_main_PuzzleSolver_main_start();
+			break;
+		case main_PuzzleSolver_main_go_to_pick_node:
+			exitSequence_main_PuzzleSolver_main_go_to_pick_node();
+			break;
+		case main_PuzzleSolver_main_picking_picking_going_to_middle_of_segment:
+			exitSequence_main_PuzzleSolver_main_picking_picking_going_to_middle_of_segment();
+			break;
+		case main_PuzzleSolver_main_picking_picking_at_middle_of_segment:
+			exitSequence_main_PuzzleSolver_main_picking_picking_at_middle_of_segment();
+			break;
+		case main_PuzzleSolver_main_going_in_middle_of_d1:
+			exitSequence_main_PuzzleSolver_main_going_in_middle_of_d1();
+			break;
+		case main_PuzzleSolver_main_going_to_drop_node:
+			exitSequence_main_PuzzleSolver_main_going_to_drop_node();
+			break;
+		case main_PuzzleSolver_main_dropping_dropping_going_to_middle_of_segment:
+			exitSequence_main_PuzzleSolver_main_dropping_dropping_going_to_middle_of_segment();
+			break;
+		case main_PuzzleSolver_main_dropping_dropping_at_middle_of_segment:
+			exitSequence_main_PuzzleSolver_main_dropping_dropping_at_middle_of_segment();
+			break;
+		case main_PuzzleSolver_main_going_in_middle_of_d2:
+			exitSequence_main_PuzzleSolver_main_going_in_middle_of_d2();
+			break;
+		default:
+			break;
+		}
+	}
+	
+	/* Default exit sequence for region picking */
+	private void exitSequence_main_PuzzleSolver_main_picking_picking() {
+		switch (stateVector[0]) {
+		case main_PuzzleSolver_main_picking_picking_going_to_middle_of_segment:
+			exitSequence_main_PuzzleSolver_main_picking_picking_going_to_middle_of_segment();
+			break;
+		case main_PuzzleSolver_main_picking_picking_at_middle_of_segment:
+			exitSequence_main_PuzzleSolver_main_picking_picking_at_middle_of_segment();
+			break;
+		default:
+			break;
+		}
+	}
+	
+	/* Default exit sequence for region dropping */
+	private void exitSequence_main_PuzzleSolver_main_dropping_dropping() {
+		switch (stateVector[0]) {
+		case main_PuzzleSolver_main_dropping_dropping_going_to_middle_of_segment:
+			exitSequence_main_PuzzleSolver_main_dropping_dropping_going_to_middle_of_segment();
+			break;
+		case main_PuzzleSolver_main_dropping_dropping_at_middle_of_segment:
+			exitSequence_main_PuzzleSolver_main_dropping_dropping_at_middle_of_segment();
+			break;
+		default:
+			break;
+		}
+	}
+	
+	/* Default exit sequence for region GotoTargetNode */
+	private void exitSequence_main_PuzzleSolver_GotoTargetNode() {
+		switch (stateVector[1]) {
+		case main_PuzzleSolver_GotoTargetNode_GoingToNextNode:
+			exitSequence_main_PuzzleSolver_GotoTargetNode_GoingToNextNode();
+			break;
+		case main_PuzzleSolver_GotoTargetNode_NodeAction_ToNextNode_NodeActionInProgress:
+			exitSequence_main_PuzzleSolver_GotoTargetNode_NodeAction_ToNextNode_NodeActionInProgress();
+			break;
+		case main_PuzzleSolver_GotoTargetNode_NodeAction_ToNextNode_StartNodeAction:
+			exitSequence_main_PuzzleSolver_GotoTargetNode_NodeAction_ToNextNode_StartNodeAction();
+			break;
+		case main_PuzzleSolver_GotoTargetNode_Idle:
+			exitSequence_main_PuzzleSolver_GotoTargetNode_Idle();
+			break;
+		default:
+			break;
+		}
+	}
+	
+	/* Default exit sequence for region ToNextNode */
+	private void exitSequence_main_PuzzleSolver_GotoTargetNode_NodeAction_ToNextNode() {
+		switch (stateVector[1]) {
+		case main_PuzzleSolver_GotoTargetNode_NodeAction_ToNextNode_NodeActionInProgress:
+			exitSequence_main_PuzzleSolver_GotoTargetNode_NodeAction_ToNextNode_NodeActionInProgress();
+			break;
+		case main_PuzzleSolver_GotoTargetNode_NodeAction_ToNextNode_StartNodeAction:
+			exitSequence_main_PuzzleSolver_GotoTargetNode_NodeAction_ToNextNode_StartNodeAction();
+			break;
+		default:
+			break;
+		}
+	}
+	
+	/* Default exit sequence for region Coordinates */
+	private void exitSequence_main_PuzzleSolver_Coordinates() {
+		switch (stateVector[2]) {
+		case main_PuzzleSolver_Coordinates_Coordinates:
+			exitSequence_main_PuzzleSolver_Coordinates_Coordinates();
+			break;
+		default:
+			break;
+		}
+	}
+	
+	/* Default exit sequence for region LineFollower */
+	private void exitSequence_main_PuzzleSolver_LineFollower() {
+		switch (stateVector[3]) {
+		case main_PuzzleSolver_LineFollower_LineFollowerOn_s_AllSensorDetectWhite:
+			exitSequence_main_PuzzleSolver_LineFollower_LineFollowerOn_s_AllSensorDetectWhite();
+			break;
+		case main_PuzzleSolver_LineFollower_LineFollowerOn_s_Composite_RightSensorOnLine_LeftSensorOnLine_CenterSensorOnLine_inner_region_RightSensorOnLine:
+			exitSequence_main_PuzzleSolver_LineFollower_LineFollowerOn_s_Composite_RightSensorOnLine_LeftSensorOnLine_CenterSensorOnLine_inner_region_RightSensorOnLine();
+			break;
+		case main_PuzzleSolver_LineFollower_LineFollowerOn_s_Composite_RightSensorOnLine_LeftSensorOnLine_CenterSensorOnLine_inner_region_LeftSensorOnLine:
+			exitSequence_main_PuzzleSolver_LineFollower_LineFollowerOn_s_Composite_RightSensorOnLine_LeftSensorOnLine_CenterSensorOnLine_inner_region_LeftSensorOnLine();
+			break;
+		case main_PuzzleSolver_LineFollower_LineFollowerOn_s_Composite_RightSensorOnLine_LeftSensorOnLine_CenterSensorOnLine_inner_region_CenterSensorOnLine:
+			exitSequence_main_PuzzleSolver_LineFollower_LineFollowerOn_s_Composite_RightSensorOnLine_LeftSensorOnLine_CenterSensorOnLine_inner_region_CenterSensorOnLine();
+			break;
+		case main_PuzzleSolver_LineFollower_LineFollowerOff:
+			exitSequence_main_PuzzleSolver_LineFollower_LineFollowerOff();
+			break;
+		default:
+			break;
+		}
+	}
+	
+	/* Default exit sequence for region s */
+	private void exitSequence_main_PuzzleSolver_LineFollower_LineFollowerOn_s() {
+		switch (stateVector[3]) {
+		case main_PuzzleSolver_LineFollower_LineFollowerOn_s_AllSensorDetectWhite:
+			exitSequence_main_PuzzleSolver_LineFollower_LineFollowerOn_s_AllSensorDetectWhite();
+			break;
+		case main_PuzzleSolver_LineFollower_LineFollowerOn_s_Composite_RightSensorOnLine_LeftSensorOnLine_CenterSensorOnLine_inner_region_RightSensorOnLine:
+			exitSequence_main_PuzzleSolver_LineFollower_LineFollowerOn_s_Composite_RightSensorOnLine_LeftSensorOnLine_CenterSensorOnLine_inner_region_RightSensorOnLine();
+			break;
+		case main_PuzzleSolver_LineFollower_LineFollowerOn_s_Composite_RightSensorOnLine_LeftSensorOnLine_CenterSensorOnLine_inner_region_LeftSensorOnLine:
+			exitSequence_main_PuzzleSolver_LineFollower_LineFollowerOn_s_Composite_RightSensorOnLine_LeftSensorOnLine_CenterSensorOnLine_inner_region_LeftSensorOnLine();
+			break;
+		case main_PuzzleSolver_LineFollower_LineFollowerOn_s_Composite_RightSensorOnLine_LeftSensorOnLine_CenterSensorOnLine_inner_region_CenterSensorOnLine:
+			exitSequence_main_PuzzleSolver_LineFollower_LineFollowerOn_s_Composite_RightSensorOnLine_LeftSensorOnLine_CenterSensorOnLine_inner_region_CenterSensorOnLine();
+			break;
+		default:
+			break;
+		}
+	}
+	
+	/* Default exit sequence for region inner region */
+	private void exitSequence_main_PuzzleSolver_LineFollower_LineFollowerOn_s_Composite_RightSensorOnLine_LeftSensorOnLine_CenterSensorOnLine_inner_region() {
+		switch (stateVector[3]) {
+		case main_PuzzleSolver_LineFollower_LineFollowerOn_s_Composite_RightSensorOnLine_LeftSensorOnLine_CenterSensorOnLine_inner_region_RightSensorOnLine:
+			exitSequence_main_PuzzleSolver_LineFollower_LineFollowerOn_s_Composite_RightSensorOnLine_LeftSensorOnLine_CenterSensorOnLine_inner_region_RightSensorOnLine();
+			break;
+		case main_PuzzleSolver_LineFollower_LineFollowerOn_s_Composite_RightSensorOnLine_LeftSensorOnLine_CenterSensorOnLine_inner_region_LeftSensorOnLine:
+			exitSequence_main_PuzzleSolver_LineFollower_LineFollowerOn_s_Composite_RightSensorOnLine_LeftSensorOnLine_CenterSensorOnLine_inner_region_LeftSensorOnLine();
+			break;
+		case main_PuzzleSolver_LineFollower_LineFollowerOn_s_Composite_RightSensorOnLine_LeftSensorOnLine_CenterSensorOnLine_inner_region_CenterSensorOnLine:
+			exitSequence_main_PuzzleSolver_LineFollower_LineFollowerOn_s_Composite_RightSensorOnLine_LeftSensorOnLine_CenterSensorOnLine_inner_region_CenterSensorOnLine();
+			break;
+		default:
+			break;
+		}
+	}
+	
+	/* Default exit sequence for region Orientation */
+	private void exitSequence_main_PuzzleSolver_Orientation() {
+		switch (stateVector[4]) {
+		case main_PuzzleSolver_Orientation_East:
+			exitSequence_main_PuzzleSolver_Orientation_East();
+			break;
+		case main_PuzzleSolver_Orientation_West:
+			exitSequence_main_PuzzleSolver_Orientation_West();
+			break;
+		case main_PuzzleSolver_Orientation_North:
+			exitSequence_main_PuzzleSolver_Orientation_North();
+			break;
+		case main_PuzzleSolver_Orientation_South:
+			exitSequence_main_PuzzleSolver_Orientation_South();
+			break;
+		default:
+			break;
+		}
+	}
+	
+	/* Default exit sequence for region Turn */
+	private void exitSequence_main_PuzzleSolver_Turn() {
+		switch (stateVector[5]) {
+		case main_PuzzleSolver_Turn_TurningOn_ss_GoingForward:
+			exitSequence_main_PuzzleSolver_Turn_TurningOn_ss_GoingForward();
+			break;
+		case main_PuzzleSolver_Turn_TurningOn_ss_TurningLeft:
+			exitSequence_main_PuzzleSolver_Turn_TurningOn_ss_TurningLeft();
+			break;
+		case main_PuzzleSolver_Turn_TurningOn_ss_TurningRight:
+			exitSequence_main_PuzzleSolver_Turn_TurningOn_ss_TurningRight();
+			break;
+		case main_PuzzleSolver_Turn_TurningOn_ss_TurningBack:
+			exitSequence_main_PuzzleSolver_Turn_TurningOn_ss_TurningBack();
+			break;
+		case main_PuzzleSolver_Turn_TurningOff:
+			exitSequence_main_PuzzleSolver_Turn_TurningOff();
+			break;
+		default:
+			break;
+		}
+	}
+	
+	/* Default exit sequence for region ss */
+	private void exitSequence_main_PuzzleSolver_Turn_TurningOn_ss() {
+		switch (stateVector[5]) {
+		case main_PuzzleSolver_Turn_TurningOn_ss_GoingForward:
+			exitSequence_main_PuzzleSolver_Turn_TurningOn_ss_GoingForward();
+			break;
+		case main_PuzzleSolver_Turn_TurningOn_ss_TurningLeft:
+			exitSequence_main_PuzzleSolver_Turn_TurningOn_ss_TurningLeft();
+			break;
+		case main_PuzzleSolver_Turn_TurningOn_ss_TurningRight:
+			exitSequence_main_PuzzleSolver_Turn_TurningOn_ss_TurningRight();
+			break;
+		case main_PuzzleSolver_Turn_TurningOn_ss_TurningBack:
+			exitSequence_main_PuzzleSolver_Turn_TurningOn_ss_TurningBack();
+			break;
+		default:
+			break;
+		}
+	}
+	
+	/* The reactions of state start. */
+	private void react_main_PuzzleSolver_main_start() {
+		if (check_main_PuzzleSolver_main_start_tr0_tr0()) {
+			effect_main_PuzzleSolver_main_start_tr0();
+		}
+	}
+	
+	/* The reactions of state go to pick node. */
+	private void react_main_PuzzleSolver_main_go_to_pick_node() {
+		if (check_main_PuzzleSolver_main_go_to_pick_node_tr0_tr0()) {
+			effect_main_PuzzleSolver_main_go_to_pick_node_tr0();
+		}
+	}
+	
+	/* The reactions of state going to middle of segment. */
+	private void react_main_PuzzleSolver_main_picking_picking_going_to_middle_of_segment() {
+		if (check_main_PuzzleSolver_main_picking_picking_going_to_middle_of_segment_tr0_tr0()) {
+			effect_main_PuzzleSolver_main_picking_picking_going_to_middle_of_segment_tr0();
+		}
+	}
+	
+	/* The reactions of state at middle of segment. */
+	private void react_main_PuzzleSolver_main_picking_picking_at_middle_of_segment() {
+		if (check_main_PuzzleSolver_main_picking_picking_at_middle_of_segment_tr0_tr0()) {
+			effect_main_PuzzleSolver_main_picking_picking_at_middle_of_segment_tr0();
+		}
+	}
+	
+	/* The reactions of state going in middle of d1. */
+	private void react_main_PuzzleSolver_main_going_in_middle_of_d1() {
+		if (check_main_PuzzleSolver_main_going_in_middle_of_d1_tr0_tr0()) {
+			effect_main_PuzzleSolver_main_going_in_middle_of_d1_tr0();
+		}
+	}
+	
+	/* The reactions of state going to drop node. */
+	private void react_main_PuzzleSolver_main_going_to_drop_node() {
+		if (check_main_PuzzleSolver_main_going_to_drop_node_tr0_tr0()) {
+			effect_main_PuzzleSolver_main_going_to_drop_node_tr0();
+		}
+	}
+	
+	/* The reactions of state going to middle of segment. */
+	private void react_main_PuzzleSolver_main_dropping_dropping_going_to_middle_of_segment() {
+		if (check_main_PuzzleSolver_main_dropping_dropping_going_to_middle_of_segment_tr0_tr0()) {
+			effect_main_PuzzleSolver_main_dropping_dropping_going_to_middle_of_segment_tr0();
+		}
+	}
+	
+	/* The reactions of state at middle of segment. */
+	private void react_main_PuzzleSolver_main_dropping_dropping_at_middle_of_segment() {
+		if (check_main_PuzzleSolver_main_dropping_dropping_at_middle_of_segment_tr0_tr0()) {
+			effect_main_PuzzleSolver_main_dropping_dropping_at_middle_of_segment_tr0();
+		}
+	}
+	
+	/* The reactions of state going in middle of d2. */
+	private void react_main_PuzzleSolver_main_going_in_middle_of_d2() {
+		if (check_main_PuzzleSolver_main_going_in_middle_of_d2_tr0_tr0()) {
+			effect_main_PuzzleSolver_main_going_in_middle_of_d2_tr0();
+		}
+	}
+	
+	/* The reactions of state GoingToNextNode. */
+	private void react_main_PuzzleSolver_GotoTargetNode_GoingToNextNode() {
+		if (check_main_PuzzleSolver_GotoTargetNode_GoingToNextNode_tr0_tr0()) {
+			effect_main_PuzzleSolver_GotoTargetNode_GoingToNextNode_tr0();
+		}
+	}
+	
+	/* The reactions of state NodeActionInProgress. */
+	private void react_main_PuzzleSolver_GotoTargetNode_NodeAction_ToNextNode_NodeActionInProgress() {
+		if (check_main_PuzzleSolver_GotoTargetNode_NodeAction_ToNextNode_NodeActionInProgress_tr0_tr0()) {
+			effect_main_PuzzleSolver_GotoTargetNode_NodeAction_ToNextNode_NodeActionInProgress_tr0();
+		}
+	}
+	
+	/* The reactions of state StartNodeAction. */
+	private void react_main_PuzzleSolver_GotoTargetNode_NodeAction_ToNextNode_StartNodeAction() {
+		effect_main_PuzzleSolver_GotoTargetNode_NodeAction_ToNextNode_StartNodeAction_tr0();
+	}
+	
+	/* The reactions of state Idle. */
+	private void react_main_PuzzleSolver_GotoTargetNode_Idle() {
+		if (check_main_PuzzleSolver_GotoTargetNode_Idle_tr0_tr0()) {
+			effect_main_PuzzleSolver_GotoTargetNode_Idle_tr0();
+		}
+	}
+	
+	/* The reactions of state Coordinates. */
+	private void react_main_PuzzleSolver_Coordinates_Coordinates() {
+		if (check_main_PuzzleSolver_Coordinates_Coordinates_tr0_tr0()) {
+			effect_main_PuzzleSolver_Coordinates_Coordinates_tr0();
+		}
+	}
+	
+	/* The reactions of state AllSensorDetectWhite. */
+	private void react_main_PuzzleSolver_LineFollower_LineFollowerOn_s_AllSensorDetectWhite() {
+		if (check_main_PuzzleSolver_LineFollower_LineFollowerOn_tr0_tr0()) {
+			effect_main_PuzzleSolver_LineFollower_LineFollowerOn_tr0();
+		} else {
+			if (check_main_PuzzleSolver_LineFollower_LineFollowerOn_s_AllSensorDetectWhite_tr0_tr0()) {
+				effect_main_PuzzleSolver_LineFollower_LineFollowerOn_s_AllSensorDetectWhite_tr0();
+			} else {
+				if (check_main_PuzzleSolver_LineFollower_LineFollowerOn_s_AllSensorDetectWhite_tr1_tr1()) {
+					effect_main_PuzzleSolver_LineFollower_LineFollowerOn_s_AllSensorDetectWhite_tr1();
+				} else {
+					if (check_main_PuzzleSolver_LineFollower_LineFollowerOn_s_AllSensorDetectWhite_tr2_tr2()) {
+						effect_main_PuzzleSolver_LineFollower_LineFollowerOn_s_AllSensorDetectWhite_tr2();
+					} else {
+						if (check_main_PuzzleSolver_LineFollower_LineFollowerOn_s_AllSensorDetectWhite_tr3_tr3()) {
+							effect_main_PuzzleSolver_LineFollower_LineFollowerOn_s_AllSensorDetectWhite_tr3();
+						}
+					}
+				}
+			}
+		}
+	}
+	
+	/* The reactions of state RightSensorOnLine. */
+	private void react_main_PuzzleSolver_LineFollower_LineFollowerOn_s_Composite_RightSensorOnLine_LeftSensorOnLine_CenterSensorOnLine_inner_region_RightSensorOnLine() {
+		if (check_main_PuzzleSolver_LineFollower_LineFollowerOn_tr0_tr0()) {
+			effect_main_PuzzleSolver_LineFollower_LineFollowerOn_tr0();
+		} else {
+			if (check_main_PuzzleSolver_LineFollower_LineFollowerOn_s_Composite_RightSensorOnLine_LeftSensorOnLine_CenterSensorOnLine_tr0_tr0()) {
+				effect_main_PuzzleSolver_LineFollower_LineFollowerOn_s_Composite_RightSensorOnLine_LeftSensorOnLine_CenterSensorOnLine_tr0();
+			} else {
+				if (check_main_PuzzleSolver_LineFollower_LineFollowerOn_s_Composite_RightSensorOnLine_LeftSensorOnLine_CenterSensorOnLine_inner_region_RightSensorOnLine_tr0_tr0()) {
+					effect_main_PuzzleSolver_LineFollower_LineFollowerOn_s_Composite_RightSensorOnLine_LeftSensorOnLine_CenterSensorOnLine_inner_region_RightSensorOnLine_tr0();
+				}
+			}
+		}
+	}
+	
+	/* The reactions of state LeftSensorOnLine. */
+	private void react_main_PuzzleSolver_LineFollower_LineFollowerOn_s_Composite_RightSensorOnLine_LeftSensorOnLine_CenterSensorOnLine_inner_region_LeftSensorOnLine() {
+		if (check_main_PuzzleSolver_LineFollower_LineFollowerOn_tr0_tr0()) {
+			effect_main_PuzzleSolver_LineFollower_LineFollowerOn_tr0();
+		} else {
+			if (check_main_PuzzleSolver_LineFollower_LineFollowerOn_s_Composite_RightSensorOnLine_LeftSensorOnLine_CenterSensorOnLine_tr0_tr0()) {
+				effect_main_PuzzleSolver_LineFollower_LineFollowerOn_s_Composite_RightSensorOnLine_LeftSensorOnLine_CenterSensorOnLine_tr0();
+			} else {
+				if (check_main_PuzzleSolver_LineFollower_LineFollowerOn_s_Composite_RightSensorOnLine_LeftSensorOnLine_CenterSensorOnLine_inner_region_LeftSensorOnLine_tr0_tr0()) {
+					effect_main_PuzzleSolver_LineFollower_LineFollowerOn_s_Composite_RightSensorOnLine_LeftSensorOnLine_CenterSensorOnLine_inner_region_LeftSensorOnLine_tr0();
+				}
+			}
+		}
+	}
+	
+	/* The reactions of state CenterSensorOnLine. */
+	private void react_main_PuzzleSolver_LineFollower_LineFollowerOn_s_Composite_RightSensorOnLine_LeftSensorOnLine_CenterSensorOnLine_inner_region_CenterSensorOnLine() {
+		if (check_main_PuzzleSolver_LineFollower_LineFollowerOn_tr0_tr0()) {
+			effect_main_PuzzleSolver_LineFollower_LineFollowerOn_tr0();
+		} else {
+			if (check_main_PuzzleSolver_LineFollower_LineFollowerOn_s_Composite_RightSensorOnLine_LeftSensorOnLine_CenterSensorOnLine_tr0_tr0()) {
+				effect_main_PuzzleSolver_LineFollower_LineFollowerOn_s_Composite_RightSensorOnLine_LeftSensorOnLine_CenterSensorOnLine_tr0();
+			} else {
+				if (check_main_PuzzleSolver_LineFollower_LineFollowerOn_s_Composite_RightSensorOnLine_LeftSensorOnLine_CenterSensorOnLine_inner_region_CenterSensorOnLine_tr0_tr0()) {
+					effect_main_PuzzleSolver_LineFollower_LineFollowerOn_s_Composite_RightSensorOnLine_LeftSensorOnLine_CenterSensorOnLine_inner_region_CenterSensorOnLine_tr0();
+				} else {
+					if (check_main_PuzzleSolver_LineFollower_LineFollowerOn_s_Composite_RightSensorOnLine_LeftSensorOnLine_CenterSensorOnLine_inner_region_CenterSensorOnLine_tr1_tr1()) {
+						effect_main_PuzzleSolver_LineFollower_LineFollowerOn_s_Composite_RightSensorOnLine_LeftSensorOnLine_CenterSensorOnLine_inner_region_CenterSensorOnLine_tr1();
+					}
+				}
+			}
+		}
+	}
+	
+	/* The reactions of state LineFollowerOff. */
+	private void react_main_PuzzleSolver_LineFollower_LineFollowerOff() {
+		if (check_main_PuzzleSolver_LineFollower_LineFollowerOff_tr0_tr0()) {
+			effect_main_PuzzleSolver_LineFollower_LineFollowerOff_tr0();
+		}
+	}
+	
+	/* The reactions of state East. */
+	private void react_main_PuzzleSolver_Orientation_East() {
+		if (check_main_PuzzleSolver_Orientation_East_tr0_tr0()) {
+			effect_main_PuzzleSolver_Orientation_East_tr0();
+		} else {
+			if (check_main_PuzzleSolver_Orientation_East_tr1_tr1()) {
+				effect_main_PuzzleSolver_Orientation_East_tr1();
+			} else {
+				if (check_main_PuzzleSolver_Orientation_East_tr2_tr2()) {
+					effect_main_PuzzleSolver_Orientation_East_tr2();
+				} else {
+					if (check_main_PuzzleSolver_Orientation_East_tr3_tr3()) {
+						effect_main_PuzzleSolver_Orientation_East_tr3();
+					}
+				}
+			}
+		}
+	}
+	
+	/* The reactions of state West. */
+	private void react_main_PuzzleSolver_Orientation_West() {
+		if (check_main_PuzzleSolver_Orientation_West_tr0_tr0()) {
+			effect_main_PuzzleSolver_Orientation_West_tr0();
+		} else {
+			if (check_main_PuzzleSolver_Orientation_West_tr1_tr1()) {
+				effect_main_PuzzleSolver_Orientation_West_tr1();
+			} else {
+				if (check_main_PuzzleSolver_Orientation_West_tr2_tr2()) {
+					effect_main_PuzzleSolver_Orientation_West_tr2();
+				} else {
+					if (check_main_PuzzleSolver_Orientation_West_tr3_tr3()) {
+						effect_main_PuzzleSolver_Orientation_West_tr3();
+					}
+				}
+			}
+		}
+	}
+	
+	/* The reactions of state North. */
+	private void react_main_PuzzleSolver_Orientation_North() {
+		if (check_main_PuzzleSolver_Orientation_North_tr0_tr0()) {
+			effect_main_PuzzleSolver_Orientation_North_tr0();
+		} else {
+			if (check_main_PuzzleSolver_Orientation_North_tr1_tr1()) {
+				effect_main_PuzzleSolver_Orientation_North_tr1();
+			} else {
+				if (check_main_PuzzleSolver_Orientation_North_tr2_tr2()) {
+					effect_main_PuzzleSolver_Orientation_North_tr2();
+				} else {
+					if (check_main_PuzzleSolver_Orientation_North_tr3_tr3()) {
+						effect_main_PuzzleSolver_Orientation_North_tr3();
+					}
+				}
+			}
+		}
+	}
+	
+	/* The reactions of state South. */
+	private void react_main_PuzzleSolver_Orientation_South() {
+		if (check_main_PuzzleSolver_Orientation_South_tr0_tr0()) {
+			effect_main_PuzzleSolver_Orientation_South_tr0();
+		} else {
+			if (check_main_PuzzleSolver_Orientation_South_tr1_tr1()) {
+				effect_main_PuzzleSolver_Orientation_South_tr1();
+			} else {
+				if (check_main_PuzzleSolver_Orientation_South_tr2_tr2()) {
+					effect_main_PuzzleSolver_Orientation_South_tr2();
+				} else {
+					if (check_main_PuzzleSolver_Orientation_South_tr3_tr3()) {
+						effect_main_PuzzleSolver_Orientation_South_tr3();
+					}
+				}
+			}
+		}
+	}
+	
+	/* The reactions of state GoingForward. */
+	private void react_main_PuzzleSolver_Turn_TurningOn_ss_GoingForward() {
+		if (check_main_PuzzleSolver_Turn_TurningOn_ss_GoingForward_tr0_tr0()) {
+			effect_main_PuzzleSolver_Turn_TurningOn_ss_GoingForward_tr0();
+		}
+	}
+	
+	/* The reactions of state TurningLeft. */
+	private void react_main_PuzzleSolver_Turn_TurningOn_ss_TurningLeft() {
+		if (check_main_PuzzleSolver_Turn_TurningOn_ss_TurningLeft_tr0_tr0()) {
+			effect_main_PuzzleSolver_Turn_TurningOn_ss_TurningLeft_tr0();
+		}
+	}
+	
+	/* The reactions of state TurningRight. */
+	private void react_main_PuzzleSolver_Turn_TurningOn_ss_TurningRight() {
+		if (check_main_PuzzleSolver_Turn_TurningOn_ss_TurningRight_tr0_tr0()) {
+			effect_main_PuzzleSolver_Turn_TurningOn_ss_TurningRight_tr0();
+		}
+	}
+	
+	/* The reactions of state TurningBack. */
+	private void react_main_PuzzleSolver_Turn_TurningOn_ss_TurningBack() {
+		if (check_main_PuzzleSolver_Turn_TurningOn_ss_TurningBack_tr0_tr0()) {
+			effect_main_PuzzleSolver_Turn_TurningOn_ss_TurningBack_tr0();
+		}
+	}
+	
+	/* The reactions of state TurningOff. */
+	private void react_main_PuzzleSolver_Turn_TurningOff() {
+		if (check_main_PuzzleSolver_Turn_TurningOff_tr0_tr0()) {
+			effect_main_PuzzleSolver_Turn_TurningOff_tr0();
+		}
+	}
+	
+	/* The reactions of state stop. */
+	private void react_main_stop() {
+	}
+	
+	/* The reactions of state null. */
+	private void react_main_PuzzleSolver_main__choice_0() {
+		if (check_main_PuzzleSolver_main__choice_0_tr1_tr1()) {
+			effect_main_PuzzleSolver_main__choice_0_tr1();
+		} else {
+			effect_main_PuzzleSolver_main__choice_0_tr0();
+		}
+	}
+	
+	/* The reactions of state null. */
+	private void react_main_PuzzleSolver_GotoTargetNode_NodeAction_ToNextNode__choice_0() {
+		if (check_main_PuzzleSolver_GotoTargetNode_NodeAction_ToNextNode__choice_0_tr0_tr0()) {
+			effect_main_PuzzleSolver_GotoTargetNode_NodeAction_ToNextNode__choice_0_tr0();
+		} else {
+			if (check_main_PuzzleSolver_GotoTargetNode_NodeAction_ToNextNode__choice_0_tr1_tr1()) {
+				effect_main_PuzzleSolver_GotoTargetNode_NodeAction_ToNextNode__choice_0_tr1();
+			} else {
+				effect_main_PuzzleSolver_GotoTargetNode_NodeAction_ToNextNode__choice_0_tr2();
+			}
+		}
+	}
+	
+	/* The reactions of state null. */
+	private void react_main_PuzzleSolver_GotoTargetNode_NodeAction_ToNextNode__choice_1() {
+		if (check_main_PuzzleSolver_GotoTargetNode_NodeAction_ToNextNode__choice_1_tr0_tr0()) {
+			effect_main_PuzzleSolver_GotoTargetNode_NodeAction_ToNextNode__choice_1_tr0();
+		} else {
+			if (check_main_PuzzleSolver_GotoTargetNode_NodeAction_ToNextNode__choice_1_tr1_tr1()) {
+				effect_main_PuzzleSolver_GotoTargetNode_NodeAction_ToNextNode__choice_1_tr1();
+			} else {
+				effect_main_PuzzleSolver_GotoTargetNode_NodeAction_ToNextNode__choice_1_tr3();
+			}
+		}
+	}
+	
+	/* The reactions of state null. */
+	private void react_main_PuzzleSolver_Coordinates__choice_0() {
+		if (check_main_PuzzleSolver_Coordinates__choice_0_tr0_tr0()) {
+			effect_main_PuzzleSolver_Coordinates__choice_0_tr0();
+		} else {
+			if (check_main_PuzzleSolver_Coordinates__choice_0_tr1_tr1()) {
+				effect_main_PuzzleSolver_Coordinates__choice_0_tr1();
+			} else {
+				if (check_main_PuzzleSolver_Coordinates__choice_0_tr2_tr2()) {
+					effect_main_PuzzleSolver_Coordinates__choice_0_tr2();
+				} else {
+					if (check_main_PuzzleSolver_Coordinates__choice_0_tr3_tr3()) {
+						effect_main_PuzzleSolver_Coordinates__choice_0_tr3();
+					} else {
+						effect_main_PuzzleSolver_Coordinates__choice_0_tr4();
+					}
+				}
+			}
+		}
+	}
+	
+	/* The reactions of state null. */
+	private void react_main_PuzzleSolver_Turn_TurningOn_ss__choice_0() {
+		if (check_main_PuzzleSolver_Turn_TurningOn_ss__choice_0_tr0_tr0()) {
+			effect_main_PuzzleSolver_Turn_TurningOn_ss__choice_0_tr0();
+		} else {
+			if (check_main_PuzzleSolver_Turn_TurningOn_ss__choice_0_tr1_tr1()) {
+				effect_main_PuzzleSolver_Turn_TurningOn_ss__choice_0_tr1();
+			} else {
+				if (check_main_PuzzleSolver_Turn_TurningOn_ss__choice_0_tr2_tr2()) {
+					effect_main_PuzzleSolver_Turn_TurningOn_ss__choice_0_tr2();
+				} else {
+					if (check_main_PuzzleSolver_Turn_TurningOn_ss__choice_0_tr3_tr3()) {
+						effect_main_PuzzleSolver_Turn_TurningOn_ss__choice_0_tr3();
+					} else {
+						effect_main_PuzzleSolver_Turn_TurningOn_ss__choice_0_tr4();
+					}
+				}
+			}
+		}
+	}
+	
+	/* Default react sequence for initial entry  */
+	private void react_main__entry_Default() {
+		enterSequence_main_PuzzleSolver_default();
+	}
+	
+	/* Default react sequence for initial entry  */
+	private void react_main_PuzzleSolver_main__entry_Default() {
+		enterSequence_main_PuzzleSolver_main_start_default();
+	}
+	
+	/* Default react sequence for initial entry  */
+	private void react_main_PuzzleSolver_main_picking_picking__entry_Default() {
+		enterSequence_main_PuzzleSolver_main_picking_picking_going_to_middle_of_segment_default();
+	}
+	
+	/* Default react sequence for initial entry  */
+	private void react_main_PuzzleSolver_main_dropping_dropping__entry_Default() {
+		enterSequence_main_PuzzleSolver_main_dropping_dropping_going_to_middle_of_segment_default();
+	}
+	
+	/* Default react sequence for initial entry  */
+	private void react_main_PuzzleSolver_GotoTargetNode__entry_Default() {
+		enterSequence_main_PuzzleSolver_GotoTargetNode_Idle_default();
+	}
+	
+	/* Default react sequence for initial entry  */
+	private void react_main_PuzzleSolver_GotoTargetNode_NodeAction_ToNextNode__entry_Default() {
+		enterSequence_main_PuzzleSolver_GotoTargetNode_NodeAction_ToNextNode_StartNodeAction_default();
+	}
+	
+	/* Default react sequence for initial entry  */
+	private void react_main_PuzzleSolver_Coordinates__entry_Default() {
+		enterSequence_main_PuzzleSolver_Coordinates_Coordinates_default();
+	}
+	
+	/* Default react sequence for initial entry  */
+	private void react_main_PuzzleSolver_LineFollower_LineFollowerOn_s__entry_Default() {
+		enterSequence_main_PuzzleSolver_LineFollower_LineFollowerOn_s_AllSensorDetectWhite_default();
+	}
+	
+	/* Default react sequence for initial entry  */
+	private void react_main_PuzzleSolver_LineFollower__entry_Default() {
+		enterSequence_main_PuzzleSolver_LineFollower_LineFollowerOff_default();
+	}
+	
+	/* Default react sequence for initial entry  */
+	private void react_main_PuzzleSolver_Orientation__entry_Default() {
+		enterSequence_main_PuzzleSolver_Orientation_East_default();
+	}
+	
+	/* Default react sequence for initial entry  */
+	private void react_main_PuzzleSolver_Turn_TurningOn_ss__entry_Default() {
+		sCIInput.operationCallback.velocity(180, 180);
+		
+		react_main_PuzzleSolver_Turn_TurningOn_ss__choice_0();
+	}
+	
+	/* Default react sequence for initial entry  */
+	private void react_main_PuzzleSolver_Turn__entry_Default() {
+		enterSequence_main_PuzzleSolver_Turn_TurningOff_default();
+	}
+	
+	/* The reactions of exit default. */
+	private void react_main_PuzzleSolver_main_picking_picking__exit_Default() {
+		effect_main_PuzzleSolver_main_picking_tr0();
+	}
+	
+	/* The reactions of exit default. */
+	private void react_main_PuzzleSolver_main_dropping_dropping__exit_Default() {
+		effect_main_PuzzleSolver_main_dropping_tr0();
+	}
+	
+	/* The reactions of exit default. */
+	private void react_main_PuzzleSolver_main__exit_Default() {
+		effect_main_PuzzleSolver_tr0();
+	}
+	
+	/* The reactions of exit default. */
+	private void react_main_PuzzleSolver_GotoTargetNode_NodeAction_ToNextNode__exit_Default() {
+		effect_main_PuzzleSolver_GotoTargetNode_NodeAction_tr0();
+	}
+	
+	/* The reactions of exit AtTargetNode. */
+	private void react_main_PuzzleSolver_GotoTargetNode_NodeAction_ToNextNode_AtTargetNode() {
+		effect_main_PuzzleSolver_GotoTargetNode_NodeAction_tr1();
+	}
+	
+	/* The reactions of exit default. */
+	private void react_main_PuzzleSolver_Turn_TurningOn_ss__exit_Default() {
+		effect_main_PuzzleSolver_Turn_TurningOn_tr0();
+	}
+	
+	public void runCycle() {
+		if (!initialized)
+			throw new IllegalStateException(
+					"The state machine needs to be initialized first by calling the init() function.");
+		clearOutEvents();
+		for (nextStateIndex = 0; nextStateIndex < stateVector.length; nextStateIndex++) {
+			switch (stateVector[nextStateIndex]) {
+			case main_PuzzleSolver_main_start:
+				react_main_PuzzleSolver_main_start();
+				break;
+			case main_PuzzleSolver_main_go_to_pick_node:
+				react_main_PuzzleSolver_main_go_to_pick_node();
+				break;
+			case main_PuzzleSolver_main_picking_picking_going_to_middle_of_segment:
+				react_main_PuzzleSolver_main_picking_picking_going_to_middle_of_segment();
+				break;
+			case main_PuzzleSolver_main_picking_picking_at_middle_of_segment:
+				react_main_PuzzleSolver_main_picking_picking_at_middle_of_segment();
+				break;
+			case main_PuzzleSolver_main_going_in_middle_of_d1:
+				react_main_PuzzleSolver_main_going_in_middle_of_d1();
+				break;
+			case main_PuzzleSolver_main_going_to_drop_node:
+				react_main_PuzzleSolver_main_going_to_drop_node();
+				break;
+			case main_PuzzleSolver_main_dropping_dropping_going_to_middle_of_segment:
+				react_main_PuzzleSolver_main_dropping_dropping_going_to_middle_of_segment();
+				break;
+			case main_PuzzleSolver_main_dropping_dropping_at_middle_of_segment:
+				react_main_PuzzleSolver_main_dropping_dropping_at_middle_of_segment();
+				break;
+			case main_PuzzleSolver_main_going_in_middle_of_d2:
+				react_main_PuzzleSolver_main_going_in_middle_of_d2();
+				break;
+			case main_PuzzleSolver_GotoTargetNode_GoingToNextNode:
+				react_main_PuzzleSolver_GotoTargetNode_GoingToNextNode();
+				break;
+			case main_PuzzleSolver_GotoTargetNode_NodeAction_ToNextNode_NodeActionInProgress:
+				react_main_PuzzleSolver_GotoTargetNode_NodeAction_ToNextNode_NodeActionInProgress();
+				break;
+			case main_PuzzleSolver_GotoTargetNode_NodeAction_ToNextNode_StartNodeAction:
+				react_main_PuzzleSolver_GotoTargetNode_NodeAction_ToNextNode_StartNodeAction();
+				break;
+			case main_PuzzleSolver_GotoTargetNode_Idle:
+				react_main_PuzzleSolver_GotoTargetNode_Idle();
+				break;
+			case main_PuzzleSolver_Coordinates_Coordinates:
+				react_main_PuzzleSolver_Coordinates_Coordinates();
+				break;
+			case main_PuzzleSolver_LineFollower_LineFollowerOn_s_AllSensorDetectWhite:
+				react_main_PuzzleSolver_LineFollower_LineFollowerOn_s_AllSensorDetectWhite();
+				break;
+			case main_PuzzleSolver_LineFollower_LineFollowerOn_s_Composite_RightSensorOnLine_LeftSensorOnLine_CenterSensorOnLine_inner_region_RightSensorOnLine:
+				react_main_PuzzleSolver_LineFollower_LineFollowerOn_s_Composite_RightSensorOnLine_LeftSensorOnLine_CenterSensorOnLine_inner_region_RightSensorOnLine();
+				break;
+			case main_PuzzleSolver_LineFollower_LineFollowerOn_s_Composite_RightSensorOnLine_LeftSensorOnLine_CenterSensorOnLine_inner_region_LeftSensorOnLine:
+				react_main_PuzzleSolver_LineFollower_LineFollowerOn_s_Composite_RightSensorOnLine_LeftSensorOnLine_CenterSensorOnLine_inner_region_LeftSensorOnLine();
+				break;
+			case main_PuzzleSolver_LineFollower_LineFollowerOn_s_Composite_RightSensorOnLine_LeftSensorOnLine_CenterSensorOnLine_inner_region_CenterSensorOnLine:
+				react_main_PuzzleSolver_LineFollower_LineFollowerOn_s_Composite_RightSensorOnLine_LeftSensorOnLine_CenterSensorOnLine_inner_region_CenterSensorOnLine();
+				break;
+			case main_PuzzleSolver_LineFollower_LineFollowerOff:
+				react_main_PuzzleSolver_LineFollower_LineFollowerOff();
+				break;
+			case main_PuzzleSolver_Orientation_East:
+				react_main_PuzzleSolver_Orientation_East();
+				break;
+			case main_PuzzleSolver_Orientation_West:
+				react_main_PuzzleSolver_Orientation_West();
+				break;
+			case main_PuzzleSolver_Orientation_North:
+				react_main_PuzzleSolver_Orientation_North();
+				break;
+			case main_PuzzleSolver_Orientation_South:
+				react_main_PuzzleSolver_Orientation_South();
+				break;
+			case main_PuzzleSolver_Turn_TurningOn_ss_GoingForward:
+				react_main_PuzzleSolver_Turn_TurningOn_ss_GoingForward();
+				break;
+			case main_PuzzleSolver_Turn_TurningOn_ss_TurningLeft:
+				react_main_PuzzleSolver_Turn_TurningOn_ss_TurningLeft();
+				break;
+			case main_PuzzleSolver_Turn_TurningOn_ss_TurningRight:
+				react_main_PuzzleSolver_Turn_TurningOn_ss_TurningRight();
+				break;
+			case main_PuzzleSolver_Turn_TurningOn_ss_TurningBack:
+				react_main_PuzzleSolver_Turn_TurningOn_ss_TurningBack();
+				break;
+			case main_PuzzleSolver_Turn_TurningOff:
+				react_main_PuzzleSolver_Turn_TurningOff();
+				break;
+			case main_stop:
+				react_main_stop();
+				break;
+			default:
+				// $NullState$
+			}
+		}
+		clearEvents();
+	}
+}

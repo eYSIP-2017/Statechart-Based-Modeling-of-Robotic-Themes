@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<session version="1.0">
+<refactoring comment="Rename resource &apos;orthogonality/model/clock.sct&apos; to &apos;TwoBitCounter.sct&apos;" description="Rename resource &apos;clock.sct&apos;" flags="7" id="org.eclipse.ltk.core.refactoring.rename.resource" input="model/clock.sct" name="TwoBitCounter.sct" stamp="1496908616213" updateReferences="true"/>
+</session>

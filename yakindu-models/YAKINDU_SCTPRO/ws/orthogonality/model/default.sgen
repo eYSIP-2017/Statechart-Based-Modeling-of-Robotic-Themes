@@ -1,0 +1,11 @@
+GeneratorModel for yakindu::c {
+
+	statechart clock {
+
+		feature Outlet {
+			targetProject = "orthogonality"
+			targetFolder = "src-gen"
+			libraryTargetFolder = "src"
+		}
+	}
+}

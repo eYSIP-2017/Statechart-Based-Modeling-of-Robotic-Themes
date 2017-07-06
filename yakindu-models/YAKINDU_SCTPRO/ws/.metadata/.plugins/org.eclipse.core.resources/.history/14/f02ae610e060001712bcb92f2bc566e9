@@ -1,0 +1,103 @@
+package org.yakindu.scr.puzzle_solver;
+
+import org.yakindu.scr.IStatemachine;
+
+public interface IPuzzle_solverStatemachine extends IStatemachine {
+
+	public interface SCIInput {
+	
+		public long getLeft_sensor();
+		
+		public void setLeft_sensor(long value);
+		
+		public long getRight_sensor();
+		
+		public void setRight_sensor(long value);
+		
+		public long getCenter_sensor();
+		
+		public void setCenter_sensor(long value);
+		
+		public long getNode();
+		
+		public void setNode(long value);
+		
+		public boolean getIsnode();
+		
+		public void setIsnode(boolean value);
+		
+		public boolean getLeft_sensed_line();
+		
+		public void setLeft_sensed_line(boolean value);
+		
+		public boolean getCenter_sensed_line();
+		
+		public void setCenter_sensed_line(boolean value);
+		
+		public boolean getRight_sensed_line();
+		
+		public void setRight_sensed_line(boolean value);
+		
+		public long getDistance();
+		
+		public void setDistance(long value);
+		
+		public long getNum();
+		
+		public void setNum(long value);
+		
+		public long getX();
+		
+		public void setX(long value);
+		
+		public long getY();
+		
+		public void setY(long value);
+		
+		public void setSCIInputOperationCallback(SCIInputOperationCallback operationCallback);
+	
+	}
+	
+	public interface SCIInputOperationCallback {
+	
+		public void readsensor();
+		
+		public void forward();
+		
+		public void right();
+		
+		public void left();
+		
+		public long orient();
+		
+		public void velocity(long left_motor, long right_motor);
+		
+		public void forward_mm(long distance);
+		
+		public void delayms(long time);
+		
+		public void right_degrees(long angle);
+		
+		public void left_degrees(long angle);
+		
+		public void get_target();
+		
+		public void break_ID(long intensity);
+		
+		public void soft_left();
+		
+		public void soft_right();
+		
+		public void lcd_print(long row, long column, long value, long digits);
+		
+		public void reset_count();
+		
+		public void buzzer_on();
+		
+		public void buzzer_off();
+		
+	}
+	
+	public SCIInput getSCIInput();
+	
+}

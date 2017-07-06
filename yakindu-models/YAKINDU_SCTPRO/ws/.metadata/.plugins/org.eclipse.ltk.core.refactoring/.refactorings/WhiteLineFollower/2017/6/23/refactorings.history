@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<session version="1.0">
+<refactoring comment="Rename resource &apos;WhiteLineFollower/mode&apos; to &apos;model&apos;" description="Rename resource &apos;mode&apos;" flags="7" id="org.eclipse.ltk.core.refactoring.rename.resource" input="mode" name="model" stamp="1496917299164" updateReferences="true"/>
+</session>

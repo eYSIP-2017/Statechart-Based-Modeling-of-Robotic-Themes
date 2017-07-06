@@ -1,0 +1,4 @@
+#Thu Jun 08 15:12:21 IST 2017
+__DEFAULT__=false
+org.eclipse.help.ui.localSearch.master=true
+expression=out events

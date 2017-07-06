@@ -1,0 +1,11 @@
+GeneratorModel for yakindu::c {
+
+	statechart BlackLineFollower {
+
+		feature Outlet {
+			targetProject = "PuzzleSolver"
+			targetFolder = "src-gen"
+			libraryTargetFolder = "src"
+		}
+	}
+}

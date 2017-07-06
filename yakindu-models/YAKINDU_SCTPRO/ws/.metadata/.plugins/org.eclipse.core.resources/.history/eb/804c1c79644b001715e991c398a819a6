@@ -1,0 +1,207 @@
+package org.yakindu.scr.buzzer;
+
+public class BuzzerStatemachine implements IBuzzerStatemachine {
+
+	protected class SCIInputImpl implements SCIInput {
+	
+		private SCIInputOperationCallback operationCallback;
+		
+		public void setSCIInputOperationCallback(
+				SCIInputOperationCallback operationCallback) {
+			this.operationCallback = operationCallback;
+		}
+	}
+	
+	protected SCIInputImpl sCIInput;
+	
+	private boolean initialized = false;
+	
+	public enum State {
+		main_region_Buzzer_on,
+		main_region_Buzzer_off,
+		$NullState$
+	};
+	
+	private final State[] stateVector = new State[1];
+	
+	private int nextStateIndex;
+	
+	public BuzzerStatemachine() {
+		sCIInput = new SCIInputImpl();
+	}
+	
+	public void init() {
+		this.initialized = true;
+		for (int i = 0; i < 1; i++) {
+			stateVector[i] = State.$NullState$;
+		}
+		clearEvents();
+		clearOutEvents();
+	}
+	
+	public void enter() {
+		if (!initialized) {
+			throw new IllegalStateException(
+					"The state machine needs to be initialized first by calling the init() function.");
+		}
+		enterSequence_main_region_default();
+	}
+	
+	public void exit() {
+		exitSequence_main_region();
+	}
+	
+	/**
+	 * @see IStatemachine#isActive()
+	 */
+	public boolean isActive() {
+		return stateVector[0] != State.$NullState$;
+	}
+	
+	/** 
+	* Always returns 'false' since this state machine can never become final.
+	*
+	* @see IStatemachine#isFinal()
+	*/
+	public boolean isFinal() {
+		return false;
+	}
+	/**
+	* This method resets the incoming events (time events included).
+	*/
+	protected void clearEvents() {
+	}
+	
+	/**
+	* This method resets the outgoing events.
+	*/
+	protected void clearOutEvents() {
+	}
+	
+	/**
+	* Returns true if the given state is currently active otherwise false.
+	*/
+	public boolean isStateActive(State state) {
+	
+		switch (state) {
+		case main_region_Buzzer_on:
+			return stateVector[0] == State.main_region_Buzzer_on;
+		case main_region_Buzzer_off:
+			return stateVector[0] == State.main_region_Buzzer_off;
+		default:
+			return false;
+		}
+	}
+	
+	public SCIInput getSCIInput() {
+		return sCIInput;
+	}
+	
+	private boolean check_main_region_Buzzer_on_tr0_tr0() {
+		return true;
+	}
+	
+	private boolean check_main_region_Buzzer_off_tr0_tr0() {
+		return true;
+	}
+	
+	private void effect_main_region_Buzzer_on_tr0() {
+		exitSequence_main_region_Buzzer_on();
+		enterSequence_main_region_Buzzer_off_default();
+	}
+	
+	private void effect_main_region_Buzzer_off_tr0() {
+		exitSequence_main_region_Buzzer_off();
+		enterSequence_main_region_Buzzer_on_default();
+	}
+	
+	/* Entry action for state 'Buzzer_on'. */
+	private void entryAction_main_region_Buzzer_on() {
+		sCIInput.operationCallback.buzzer_on();
+	}
+	
+	/* Entry action for state 'Buzzer_off'. */
+	private void entryAction_main_region_Buzzer_off() {
+		sCIInput.operationCallback.buzzer_off();
+	}
+	
+	/* 'default' enter sequence for state Buzzer_on */
+	private void enterSequence_main_region_Buzzer_on_default() {
+		entryAction_main_region_Buzzer_on();
+		nextStateIndex = 0;
+		stateVector[0] = State.main_region_Buzzer_on;
+	}
+	
+	/* 'default' enter sequence for state Buzzer_off */
+	private void enterSequence_main_region_Buzzer_off_default() {
+		entryAction_main_region_Buzzer_off();
+		nextStateIndex = 0;
+		stateVector[0] = State.main_region_Buzzer_off;
+	}
+	
+	/* 'default' enter sequence for region main region */
+	private void enterSequence_main_region_default() {
+		react_main_region__entry_Default();
+	}
+	
+	/* Default exit sequence for state Buzzer_on */
+	private void exitSequence_main_region_Buzzer_on() {
+		nextStateIndex = 0;
+		stateVector[0] = State.$NullState$;
+	}
+	
+	/* Default exit sequence for state Buzzer_off */
+	private void exitSequence_main_region_Buzzer_off() {
+		nextStateIndex = 0;
+		stateVector[0] = State.$NullState$;
+	}
+	
+	/* Default exit sequence for region main region */
+	private void exitSequence_main_region() {
+		switch (stateVector[0]) {
+		case main_region_Buzzer_on:
+			exitSequence_main_region_Buzzer_on();
+			break;
+		case main_region_Buzzer_off:
+			exitSequence_main_region_Buzzer_off();
+			break;
+		default:
+			break;
+		}
+	}
+	
+	/* The reactions of state Buzzer_on. */
+	private void react_main_region_Buzzer_on() {
+		effect_main_region_Buzzer_on_tr0();
+	}
+	
+	/* The reactions of state Buzzer_off. */
+	private void react_main_region_Buzzer_off() {
+		effect_main_region_Buzzer_off_tr0();
+	}
+	
+	/* Default react sequence for initial entry  */
+	private void react_main_region__entry_Default() {
+		enterSequence_main_region_Buzzer_on_default();
+	}
+	
+	public void runCycle() {
+		if (!initialized)
+			throw new IllegalStateException(
+					"The state machine needs to be initialized first by calling the init() function.");
+		clearOutEvents();
+		for (nextStateIndex = 0; nextStateIndex < stateVector.length; nextStateIndex++) {
+			switch (stateVector[nextStateIndex]) {
+			case main_region_Buzzer_on:
+				react_main_region_Buzzer_on();
+				break;
+			case main_region_Buzzer_off:
+				react_main_region_Buzzer_off();
+				break;
+			default:
+				// $NullState$
+			}
+		}
+		clearEvents();
+	}
+}

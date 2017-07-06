@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<session version="1.0">
+<refactoring comment="Rename resource &apos;BlackLineFollower/model/WhiteLineFollower.sct&apos; to &apos;BlackLineFollower.sct&apos;" description="Rename resource &apos;WhiteLineFollower.sct&apos;" flags="7" id="org.eclipse.ltk.core.refactoring.rename.resource" input="model/WhiteLineFollower.sct" name="BlackLineFollower.sct" stamp="1497333737601" updateReferences="true"/>
+</session>

@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<session version="1.0">
+<refactoring comment="Rename resource &apos;PuzzleSolver/model/BlackLineFollower.sct&apos; to &apos;PuzzleSolver.sct&apos;" description="Rename resource &apos;BlackLineFollower.sct&apos;" flags="7" id="org.eclipse.ltk.core.refactoring.rename.resource" input="model/BlackLineFollower.sct" name="PuzzleSolver.sct" stamp="1499188832425" updateReferences="true"/>
+</session>

@@ -1,0 +1,11 @@
+GeneratorModel for yakindu::java {
+
+	statechart puzzle_solver {
+
+		feature Outlet {
+			targetProject = "puzzle_solver"
+			targetFolder = "src-gen"
+			libraryTargetFolder = "src"
+		}
+	}
+}

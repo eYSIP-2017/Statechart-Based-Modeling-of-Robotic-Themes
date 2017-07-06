@@ -140,7 +140,7 @@ Github link for the repository of code is \href{https://github.com/eYSIP-2017/St
 The statechart consists of the states \textit{puzzle solver} and \textit{stop}. Until the puzzle is solved, it remains in \emph{puzzle solver} state. Here is brief explanation of different modules of \textit{puzzle solver} state.
  
 \begin{itemize}
-\item LineFollower state machine
+\item \textbf{LineFollower state machine}
 
 \begin{figure}[!htbp]
 	\begin{minipage}{0.45\textwidth}
@@ -164,7 +164,7 @@ The \textit{LineFollowerOn} state is further divided into some substates as show
 It contains two states, \textit{TurningOn} and \textit{TurningOff} as shown in figure \ref{turn}. When robot needs to take a turn in the grid, we need to give value to a variable turn as \textit{left, right”, “back”} and \textit{forward} according to the needed turn. After that, we need to raise an event \textit{StartTurning}. Then it will enter the \textit{TurningOn} state. The robot will start turning. As the turn is completed, it will automatically go to the \textit{TurningOff} state.
 \textit{TurningOn} state is further divided into further states as \textit{GoingForward, TurningLeft, TurningRight} and \textit{TurningBack} as shown in figure \ref{turning_on}.
 The state which is entered is selected on the basis of corresponding value of the variable turn.
-If system is in \textit{GoingForward} state, it will remain here and move forward. When the node is not detected, that is, the node has passed, it will exit this state and go to \textit{TurningOff} state.
+If system is in \textit{GoingForward} state, it will remain here and move forward. When the node is not detected i.e., the node has passed, it will exit this state and go to \textit{TurningOff} state.
 	\begin{figure}[!htbp]
 	\centering
 	\includegraphics[scale=.6]{turn.png}
@@ -177,6 +177,7 @@ If system is in \textit{GoingForward} state, it will remain here and move forwar
 	\caption{TurningOn state}
 	\label{turning_on}
 \end{figure}
+
 If system is in \textit{TurningRight} state, it will move bot forward 55 mm, break, move 55 degrees right and then keeps on turning right. When center sensor detects black (line), it will exit this state and go to \textit{TurningOff} state.
 If system is in \textit{TurningLeft} state, it will move forward 70 mm, break, move 55 degrees left and then keeps on turning left. When left sensor detects black (line), it will exit this state and go to \textit{TurningOff} state.
 If system is in \textit{TurningBack} state, it will move forward 40 mm, break, move 55 degrees right and then keeps on turning right with different velocities (to make sure of proper alignment with line as line should be between left and center sensor). When center sensor detects black (line), it will exit this state and go to \textit{TurningOff} state.
@@ -189,10 +190,10 @@ It keeps track of the orientation of the bot (figure \ref{orientation}). It cont
 	\caption{Orientation machine}
 	\label{orientation}
 \end{figure}
-For example, if \textit{OrientInEast} event is raised, in whichever of the four state the system is, it will enter in \textit{East} state by using the turning state machine with proper turn. Another way of using this state machine is if event \textit{left, right, front} or \textit{back} is raised, it will turn accordingly and update the orientation by going to the proper state.
+For example, if \textit{OrientInEast} event is raised, in whichever of the four state the system is, it will enter in \textit{East} state by using the turning state machine with proper turn. Another way of using this state machine is raising an event \textit{left, right, front} or \textit{back}. It will turn accordingly and update the orientation by going to the proper state.
 
-\item \textbf{Coordinates state machine}
-It contains only one state \textit{Coordinates} as shown in figure \ref{coordinates}. When an event \textit{update coordinates} is raised, it will update the “x” and “y” coordinates by incrementing or decrementing the appropriate value according to which of the state in Orientation state machine is active.\pagebreak
+\item \textbf{Coordinates state machine} \\
+It contains only one state \textit{Coordinates} as shown in figure \ref{coordinates}. When an event \textit{update coordinates} is raised, it will update the $x$ and $y$ coordinates by incrementing or decrementing the appropriate value according to which of the state in Orientation state machine is active.
 	\begin{figure}[]
 		\begin{minipage}{0.45\textwidth}
 	\centering
@@ -215,15 +216,15 @@ It contains only one state \textit{Coordinates} as shown in figure \ref{coordina
 \end{figure}
 
 \item \textbf{GotoTargetNode}\\
-It takes the robot to the target node tx,ty (figure \ref{GoToTargetNode}). To use it, just give the values to tx and ty. After that, raise an event \textit{gotoxy}. It will take the robot to the target coordinates in the grid. It contains substates 
+It takes the robot to the target node $tx$ , $ty$ (figure \ref{GoToTargetNode}). To use it, just give the values to $tx$ and $ty$. After that, raise an event \textit{gotoxy}. It will take the robot to the target coordinates in the grid. It contains substates 
 	 \textit{Idle, NodeAction, GoingToNextNode} as shown in figure \ref{node_action}. 
 \begin{enumerate}
-\item  Idle state.\\
+\item  Idle state\\
 When \textit{GotoTargetNode} is not being used, it remains in the \textit{Idle} state. When event \textit{gotoxy} is raised, it moves to \textit{NodeAction} state
 \item NodeAction State\\
-It takes the appropriate action at particular node for going to next node. If target node is reached, system goes to \textit{idle} state. Otherwise, first it checks whether the target x is equal to present x or not. If not, it moves the robot in x direction. Otherwise, it checks whether the target y is equal to the present y or not. If not, it moves the bot in y direction. When node action is being taken (turning in proper direction or moving out of the node) It remains in \textit{NodeActionInProgress} state. When the action is completed, it exits the \textit{NodeAction} state and goes to \textit{GoingToNextNode} state. When target node is reached, it will exit at \textit{AtTargetNode} exit point. 
+It takes the appropriate action at particular node for going to next node. If target node is reached, system goes to \textit{idle} state. Otherwise, first it checks whether the target $x$ is equal to present $x$ or not. If not, it moves the robot in $x$ direction. Otherwise, it checks whether the target $y$ is equal to the present $y$ or not. If not, it moves the bot in $y$ direction. When node action is being taken (turning in proper direction or moving out of the node), it remains in \textit{NodeActionInProgress} state. When the action is completed, it exits the \textit{NodeAction} state and goes to \textit{GoingToNextNode} state. When target node is reached, it will exit at \textit{AtTargetNode} exit point. 
 \item \textit{GoingToNextNode} state\\
-When system enters this state, it Turns on the line follower. Robot starts following the line until the next node is reached. When next node is reached, it stops the line follower, updates the coordinates and goes to \textit{NodeAction} State.
+When system enters this state, it turns on the line follower. Robot starts following the line until the next node is reached. When next node is reached, it stops the line follower, updates the coordinates and goes to \textit{NodeAction} State.
 \end{enumerate}
 \item \textbf{Main}\\ 
 It is \textit{main} state machine which uses all other state machines to accomplish the task (figure \ref{main}). Initially it enters start state and it starts the line follower. As a node is detected, line follower is stopped. The target coordinates are fetched from c function and event \textit{gotoxy} is raised.
@@ -233,7 +234,7 @@ It is \textit{main} state machine which uses all other state machines to accompl
 	\caption{main machine}
 	\label{main}
 	\end{figure} 
-Now it is in \textit{go to pick node} state. When the target node is reached, it enters \textit{picking} state (figure \ref{picking}). In \textit{picking} state, robot starts following the line and when some distance is reached, it picks the number. After a node is detected, it updates the coordinates, stops the line follower and exits the \textit{picking} state. It enters the \textit{going in middle of d1} state where it gives target coordinate as ty=2 and raises \textit{gotoxy} to reach to the middle of the grid d1. When it is reached, it gets next target coordinates and enters \textit{going to drop node} state. Here, it raises \textit{gotoxy}. The robot is now going towards drop node. When it reaches there, it goes to \textit{dropping} state (figure \ref{dropping}). This state is similar to \textit{picking} state except that it will drop the number at a certain distance. 
+Now it is in \textit{go to pick node} state. When the target node is reached, it enters \textit{picking} state (figure \ref{picking}). In \textit{picking} state, robot starts following the line and when some distance is reached, it picks the number. After a node is detected, it updates the coordinates, stops the line follower and exits the \textit{picking} state. It enters the \textit{going in middle of d1} state where it gives target coordinate as $ty$=2 and raises \textit{gotoxy} to reach to the middle of the grid d1. When it is reached, it gets next target coordinates and enters \textit{going to drop node} state. Here, it raises \textit{gotoxy}. The robot is now going towards drop node. When it reaches there, it goes to \textit{dropping} state (figure \ref{dropping}). This state is similar to \textit{picking} state except that it will drop the number at a certain distance. 
 	\begin{figure}[]
 	\begin{minipage}{0.45\textwidth}
 	\includegraphics[scale=.6]{picking.png}
@@ -256,7 +257,7 @@ After complete puzzle is solved, system comes out of puzzle solver state and ent
 \\
 \pagebreak
 \section{Use and Demo }
-Instruction for demonstration
+Instructions for demonstration
 
 \begin{enumerate}
 	\item Open Atmel Studio 7.
